@@ -1,0 +1,248 @@
+<div class="container-fluid">
+	<!-- Loading overlay section starts -->
+	<div [class.overlay-display]="overlayDisplay" class="overlay">
+		<div class="spinner">
+			<div class="rect1"></div>
+			<div class="rect2"></div>
+			<div class="rect3"></div>
+			<div class="rect4"></div>
+			<div class="rect5"></div>
+		</div>
+	</div>
+	<div class="col-md-12">
+		<div class="header">
+			<div class="welcome-user">
+				<span>FÓRUM</span>
+
+				<div class="home-navigation">
+					<div class="d-flex justify-content-end">
+						<button class="btn btn-outline-success my-2 my-sm-0" data-toggle="modal" (click)="resetForm()" [disabled]="progressoPublicacao === 'andamento'"
+						 data-target="#exampleModal">Criar publicação</button>
+					</div>
+				</div>
+			</div>
+			<hr style="height:4px; border:none; background-color:#DB362C; margin-top: 0px; margin-bottom: 0px;" />
+			<hr style="height:4px; border:none; background-color:darkgreen; margin-top: 0px; margin-bottom: 0px;" />
+		</div>
+	</div>
+	<div class="container">
+
+		<div class="offset-md-2 col-md-8 ">
+			<ul class="timeline">
+				<li *ngFor="let post of  posts">
+
+					<div *ngIf="(post.type==null)" class="timeline-panel">
+						<div class="nomePost">{{post.nome}}
+
+							<p><small class="text-muted"> {{post.time | date: 'dd/MM/yyyy'}}</small></p>
+
+						</div>
+						<div class="textoPost">
+							{{post.comentario}}
+						</div>
+						<hr />
+								<li *ngFor="let c of post.comentarios">
+									<div class="comentarios">{{c.user}}</div>
+										<span class="ajusteComent">{{c.comentario}}</span>
+								</li>
+
+						<div class="card-body">
+							<p class="card-text"></p>
+
+							<hr />
+
+							<textarea rows="1" type="text" class="form-control" id="comentario" (input)="sendComentario($event)" (input)="pegaId(post.id)"
+							 placeholder="Adicione um comentário..."></textarea>
+						</div>
+						<div class="d-flex justify-content-end">
+							<button type="button" class="btn btn-success" (click)="enviarComentario()">Enviar</button>
+						</div>
+					</div>
+
+					<div *ngIf="post.type!=null" class="timeline-panel">
+						<div class="timeline-heading">
+
+						</div>
+						<div class="timeline-body">
+
+
+							<div *ngIf="((post.type == 'image/jpeg')||(post.type == 'image/png')||(post.type == 'image/jpg'))  ">
+								<div class="nomePost">{{post.nome}}
+
+									<p><small class="text-muted"> {{post.time | date: 'dd/MM/yyyy'}}</small></p>
+
+								</div>
+								<div class="textoPost">
+									{{post.comentario}}
+								</div>
+
+								<img class="rounded mx-auto d-block img-200-200 img-responsive" src="http://172.22.2.221:8080/imagens/{{post.url_imagem}}"	/>
+								<hr />
+								<li *ngFor="let c of post.comentarios">
+									<div class="comentarios">{{c.user}}</div>
+										<span  class="ajusteComent">{{c.comentario}}</span>
+								</li>
+								<div class="card-body">
+									<p class="card-text"></p>
+
+									<hr />
+									<textarea rows="1" type="text" class="form-control" (input)="sendComentario($event)" (change)="pegaId(post.id)" placeholder="Adicione um comentário..."></textarea>
+								</div>
+
+
+
+
+								<div class="d-flex justify-content-end">
+									<button type="button" class="btn btn-success" (click)="enviarComentario()">Enviar</button>
+								</div>
+							</div>
+
+							<div *ngIf="(post.type == 'video/mp4')||(post.type == 'video/webm')">
+								<div class="nomePost">{{post.nome}}
+
+									<p><small class="text-muted"> {{post.time | date: 'dd/MM/yyyy'}}</small></p>
+
+								</div>
+								<div class="textoPost">
+									{{post.comentario}}
+								</div>
+
+								<video width="100%" height="100%" controls>
+
+									<source src="http://172.22.2.221:8080/movies/{{post.url_imagem}}" type="video/mp4">
+
+									<p>If you are reading this, it is because your browser does not support the HTML5 video element.</p>
+								</video>
+								<hr />
+								<li *ngFor="let c of post.comentarios">
+									<div class="comentarios">{{c.user}}</div>
+									<span  class="ajusteComent">{{c.comentario}}</span>
+
+								</li>
+								<div class="card-body">
+									<p class="card-text"></p>
+
+									<hr />
+									<textarea rows="1" type="text" class="form-control " (input)="sendComentario($event)" (input)="pegaId(post.id)" placeholder="Adicione um comentário..."></textarea>
+								</div>
+
+								<li *ngFor="let comentario of  postsComentarios">
+									{{comentario}}
+								</li>
+
+								<div class="d-flex justify-content-end">
+									<button type="button" class="btn btn-success" (click)="enviarComentario()">Enviar</button>
+								</div>
+							</div>
+
+
+						</div>
+					</div>
+				</li>
+
+			</ul>
+		</div>
+
+	</div>
+	<!-- Modal -->
+	<!-- Modal -->
+
+	<div class="modal fade" id="exampleModal" role="dialog">
+
+		<div class="modal-dialog" role="document">
+			<div class="modal-content" *ngIf="progressoPublicacao === 'pendente'">
+				<div class="modal-header">
+					<h5 class="modal-title" id="exampleModalLabel">Criar publicação </h5>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						   <span aria-hidden="true">&times;</span>
+                  </button>
+				</div>
+				<div class="modal-body">
+					<form>
+						<div class="panel panel-default">
+							<div class="panel-body">
+								<div class="form-group">
+
+									<label for='selecao-arquivo'><i >FOTOS/VIDEO</i></label>
+									<input class="selecao-arquivo" id='selecao-arquivo' type='file' (change)="verificaExt($event)" />
+									<div class="alert alert-danger" role="alert" [hidden]="tipoArqui">O arquivo selecionado não e válido</div>
+
+								</div>
+
+								<div [hidden]="hideElement">
+									<div [hidden]="imagem" #myId>
+										<img id="img" class="rounded mx-auto d-block img-200-200" [src]="url" #myId>
+									</div>
+									<div [hidden]="video">
+										<video id="video" width="100%" height="100%" controls [src]="url" type="video/mp4">
+											<source [src]="url" type="video/mp4">
+
+										</video>
+									</div>
+								</div>
+								<div class="form-group">
+									<br/>
+									<textarea rows="3" type="text" name="comentario" id="comentario" class="form-control" placeholder="Insira o comteúdo da publicação"
+									 [(ngModel)]="comentario" #teste (keyup)='liberaPost(teste.value)'>
+									</textarea>
+								</div>
+							</div>
+							<span>{{estado}}</span>
+
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-secondary" (click)="clearFile()">Limpar</button>
+							<button type="submit" class="btn btn-primary" [disabled]="publicar" data-dismiss="modal" (click)="upload()">Publicar</button>
+
+
+
+						</div>
+					</form>
+				</div>
+
+			</div>
+			<div class="modal-content" *ngIf="progressoPublicacao === 'andamento'">
+
+
+
+				<div class="modal-header">
+					<h5 class="modal-title" id="exampleModalLabel"> Publicação em andamento </h5>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						   <span aria-hidden="true">&times;</span>
+                  </button>
+				</div>
+				<div class="modal-body">
+
+
+					Progresso:{{porcentagemUpload}}%
+
+				</div>
+
+			</div>
+			<div class="modal-content" *ngIf="progressoPublicacao === 'concluido'">
+
+
+
+				<div class="modal-header">
+					<h5 class="modal-title" id="exampleModalLabel"> Publicação foi realizada com sucesso </h5>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						   <span aria-hidden="true">&times;</span>
+                  </button>
+				</div>
+				<div class="modal-body">
+
+					Sua publicação foi realizada com sucesso !
+
+				</div>
+
+			</div>
+		</div>
+
+
+	</div>
+
+
+</div>
+<!--div class="container">
+	<app-incluir-publicacao></app-incluir-publicacao>
+</div-->

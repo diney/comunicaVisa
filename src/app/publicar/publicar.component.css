@@ -1,0 +1,13 @@
+.container{
+margin-top:70px; 
+background: black;
+}
+
+.img-200-200 {
+   width: 500px;
+  
+}
+
+[hidden] {
+  display: none !important;
+}

@@ -1,0 +1,285 @@
+<div class="container" id="customers">
+
+
+  <div class="ordem-compra">
+    <form novalidate>
+
+
+      <div class="row">
+
+        <div class=" col-md-1">
+
+
+          <img src="/assets/images/logos/brasao.png">
+        </div>
+
+        <div class=" col-md-7">
+          <br />
+          <h6>ESTADO DE SANTA CATARINA</h6>
+        </div>
+
+        <div class=" col-md-4">
+          <br />
+          <div class="d-flex justify-content-end">
+            <h6>SOLICITAÇÃO DE DIÁRIAS</h6>
+          </div>
+        </div>
+      </div>
+
+      <hr />
+    </form>
+    <h6>SERVIDOR</h6>
+    <form #deslocamentoForm="ngForm" (ngSubmit)="adicionarDeslocamento(deslocamentoForm)" class="diney">
+      <div class="form-row" style="background: #FAFAFA; padding: 20px; border-bottom: solid 1px #F0F0F0">
+        <div class="row">
+          <div class="form-group col-sm-9">
+             <label for="nome">NOME</label>
+            <input type="text" class="form-control is-invalid" [(ngModel)]="nome" name="nome" id="nome" placeholder="NOME">
+          </div>
+          <div class="form-group col-sm-3">
+             <label for="vpf">CPF</label>
+            <input type="text" class="form-control is-invalid" [(ngModel)]="cpf" name="cpf" placeholder="CPF">
+          </div>
+        </div>
+        <div class="row">
+          <div class="form-group col-sm-5">
+             <label for="cargo/emprego">CARGO/EMPREGO</label>
+            <input type="text" class="form-control is-invalid" [(ngModel)]="cargo" name="cargo" placeholder="CARGO/EMPREGO">
+          </div>
+          <div class="form-group col-sm-2">
+             <label for="matricula">MATRÍCULA</label>
+            <input type="text" class="form-control is-invalid" [(ngModel)]="matricula" name="matricula" placeholder="MATRÍCULA">
+          </div>
+          <div class="form-group col-sm-3">
+            <label for="vinculo">VÍNCULO</label>
+            <input type="text" class="form-control is-invalid" [(ngModel)]="vinculo" name="vinculo" placeholder="VÍNCULO">
+          </div>
+          <div class="form-group col-sm-2">
+            <label for="grupo">GRUPO</label>
+            <input type="text" class="form-control is-invalid"  [(ngModel)]="grupo" placeholder="GRUPO" name="grupo">
+          </div>
+        </div>
+        <div class="row">
+          <div class="form-group col-sm-6">
+              <label for="local">LOCAL DO EXERCÍCIO</label>
+            <input type="text" class="form-control is-invalid" [(ngModel)]="local" name="local" placeholder= "LOCAL DO EXERCÍCIO">
+          </div>
+          <div class="form-group col-sm-6">
+            <label for="municipio">MUNÍCIPIO</label>
+            <input type="text" class="form-control is-invalid" [(ngModel)]="municipio" name="municipio" placeholder="MUNÍCIPIO">
+          </div>
+
+        </div>
+        <div class="row">
+          <div class="form-group col-sm-4">
+             <label for="banco">BANCO</label>
+            <input type="text" class="form-control is-invalid" [(ngModel)]="banco" name="banco" placeholder="BANCO">
+          </div>
+          <div class="form-group col-sm-4">
+            <label for="agencia">AGÊNCIA (com digito)</label>
+            <input type="text" class="form-control is-invalid" [(ngModel)]="agencia" name="agencia" placeholder="AGÊNCIA (com digito)">
+          </div>
+          <div class="form-group col-sm-4">
+             <label for="conta">CONTA CORRENTE (com dígito)</label>
+            <input type="text" class="form-control is-invalid" [(ngModel)]="conta" name="conta" placeholder="CONTA CORRENTE (com dígito)">
+          </div>
+
+        </div>
+
+      </div>
+      <div id="naoVai">
+      <h6>DESLOCAMENTOS</h6>
+
+      <div class="form-row" style="background: #FAFAFA; padding: 20px; border-bottom: solid 1px #F0F0F0">
+        <p>PARTIDA</p>
+        <div class="row">
+
+          <div class="form-group col-sm-3">
+              <label for="startDate">Data</label>
+              <input class="form-control" [(ngModel)]="humanDate" type="date" name="startDate" required/>
+          </div>
+          <div class="form-group col-sm-2">
+              <label for="estadoPartida">UF</label>
+              <select class="form-control custom-select" [(ngModel)]="estadoPartida" required #partida (click)=" pesquisaCidadePartida(partida.value)"
+                name="estadoPartida">          
+              <option  *ngFor ="let estado of estado"  > {{ estado.sigla}} </option>          
+            </select>
+          </div>
+          <div class="form-group col-sm-5">
+            <label for="cidadePartida">MUNÍCIPIO</label>
+              <select class="form-control custom-select" required name="cidadePartida" [(ngModel)]="cidadePartida"> 
+                <option  value="" >Selecione</option>              
+                <option *ngFor ="let c of cidadesPartida"   >{{c.nome}}</option>             
+              </select>
+             
+          </div>
+          <div class="form-group col-sm-2">
+             <label for="horaPartida">HORÁRIO</label>
+            <input class="form-control custom-select" id="timePartida" type="time" [(ngModel)]="horaPartida" required name="horaPartida">
+          </div>
+
+        </div>
+         <hr />
+        <p>DESTINO</p>
+        <div class="row">
+
+          <div class="form-group col-sm-2">
+             <label for="estadoDestino">UF</label>
+           <select class="form-control custom-select"  [(ngModel)]="estadoDestino" required #destino (click)=" pesquisaCidadeDestino(destino.value)" name="estadoDestino">
+              
+              <option *ngFor ="let estado of estado"  >{{estado.sigla}}</option>
+          
+          </select>
+          </div>
+          <div class="form-group col-sm-4">
+             <label for="cidadePartida">MUNÍCIPIO</label>
+              <select class="form-control custom-select" required name="cidadeDestino" [(ngModel)]="cidadeDestino"> 
+                <option  value="" >Selecione</option>              
+                <option *ngFor ="let c of cidadesDestino"   >{{c.nome}}</option>             
+              </select>
+          </div>
+          <div class="form-group col-sm-2">
+               <label for="horaDestino">HORÁRIO</label>
+            <input id="timeDestino" class="form-control custom-select" type="time" name="time" [(ngModel)]="horaDestino" required name="horaDestino">
+
+          </div>
+          <div class="form-group col-sm-4">
+              <label for="meioTransp">MEIO DE TRANSPORTE</label>
+            <select class="form-control custom-select" [(ngModel)]="transporte" required name="meioTransp">         
+              <option *ngFor ="let c of meioTrans" >{{c.nome}}</option>            
+            </select>
+          </div>
+
+        </div>
+
+        <div class="row">
+
+          <div class="form-group col d-flex justify-content-start">
+            <button type="submit" class="btn btn-primary btn-md">ADICIONAR DESLOCAMENTO</button>
+          </div>
+        </div>
+        </div>
+        <div class="row">
+          <div class="col-xs-12  col-sm-12  col-md-12  col-lg-12  col-xl-12 ">
+            <table class="table table-striped table-hover" id="table">
+              <thead>
+                <tr>
+                  <th>Data</th>
+                  <th> Estado Partida</th>
+                  <th> Cidade Partida</th>
+                  <th>Horário</th>
+                  <th> Estado Destino</th>
+                  <th>Cidade Destino</th>
+                  <th>Horário</th>
+                  <th>Meio de Transporte</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let item of deslocamentoTabela">
+                  <td>{{item.data | date: 'dd/MM/yyyy'}}</td>
+                  <td>{{item.estadoPartida}}</td>
+                  <td>{{item.cidadePartida}}</td>
+                  <td>{{item.horaPartida}}</td>
+                  <td>{{item.estadoDestino}}</td>
+                  <td>{{item.cidadeDestino}}</td>
+                  <td>{{item.horaDestino}}</td>
+                  <td>{{item.meioTransp}}</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <h6>(*)No caso de uso de passagens é obrigatória a devolução dos respectivos bilhetes.</h6>
+        </div>
+      </div>
+
+      <br />
+      <h6>OBJETIVO DA VIAGEM</h6>
+
+
+      <div class="form-row" style="background: #FAFAFA; padding: 20px; border-bottom: solid 1px #F0F0F0">
+        <div class="form-group col-md-12">
+          <textarea rows="3" type="text" class="form-control"></textarea>
+        </div>
+      </div>
+      <br />
+
+      <h6>DECLARAÇÃO DO SERVIDOR OU RESPONSÁVEL</h6>
+
+      <div class="form-row" style="background: #FAFAFA; padding: 20px; border-bottom: solid 1px #F0F0F0">
+
+        <div class="form-group col-md-12">
+          <p>Declaro, ainda que não me enquadro em qualquer das situções impeditivas para o recebimento de diárias</p>
+
+        </div>
+        <div class="row">
+          <div class="form-group col-md-6">
+            <label for="data">DATA E LOCAL</label>
+            <input type="text" class="form-control" id="data">
+          </div>
+          <div class="form-group col-md-6">
+            <label for="pwd">IDENTTIFICAÇÃO E ASSINATURA</label>
+            <input type="text" class="form-control" id="pwd">
+          </div>
+        </div>
+      </div>
+
+
+      <div class="form-row" style="background: #FAFAFA; padding: 20px; border-bottom: solid 1px #F0F0F0">
+
+
+
+        <div class="row">
+          <div class="form-group col-md-6">
+            <h6>AUTORIZAÇÃO DA CHEFIA IMEDIATA</h6>
+            <label for="u">IDENTIFICAÇÃO E ASSINATURA</label>
+            <input type="text" class="form-control" id="u">
+          </div>
+          <div class="form-group col-md-6">
+            <h6>AUTORIZAÇÃO DA DIRETORIA</h6>
+            <label for="p">IDENTIFICAÇÃO E ASSINATURA</label>
+            <input type="text" class="form-control" id="p">
+          </div>
+        </div>
+      </div>
+
+      <div class="form-row" style="background: #FAFAFA; padding: 20px; border-bottom: solid 1px #F0F0F0">
+
+        <h6>AUTORIZAÇÃO DA DIRETORIA RESPONSÁVEL PELO PAGAMENTO DE DIÁRIAS (DIRETORIA GERAL OU EQUIVALENTE)</h6>
+
+        <div class="row">
+          <div class="form-group col-md-6">
+
+            <label for="u">IDENTIFICAÇÃO E ASSINATURA</label>
+            <input type="text" class="form-control" id="u">
+          </div>
+          <div class="form-group col-md-3">
+
+            <label for="p">DATA</label>
+            <input type="text" class="form-control" id="p">
+          </div>
+          <div class="form-group col-md-3">
+
+            <label for="p">HORÁRIO</label>
+            <input type="text" class="form-control" id="p">
+          </div>
+
+        </div>
+      </div>
+
+      <hr />
+
+    </form>
+    <button type="submit" class="btn btn-primary btn-md" (click)="teste1()"id="cmd">PDF</button>
+ 
+
+<div id="content">
+    <h3>Sample h3 tag</h3>
+    <p>Sample pararaph</p>
+</div>
+<div id="editor"></div>
+<button id="cmd">Generate PDF</button>
+
+
+</div>
+
+

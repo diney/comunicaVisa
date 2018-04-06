@@ -1,0 +1,33 @@
+<div class="container">
+<form  >
+
+	<div class="panel panel-default">
+		<div class="panel-heading">
+			<h4>PUBLICAR UM POST</h4>
+		</div>
+		<div class="panel-body">
+			<div class="form-group">
+				
+				<input type="file" name="arquivo" id="arquivo" class=" form-control "  (change)="verificaExt($event)" placeholder="Upload file..." 
+				[(ngModel)]="arquivo" required #file="ngModel"/>
+				<div class="alert alert-danger" role="alert" [hidden]="tipoArqui">O arquivo selecionado não e válido</div>
+				  
+			</div>
+			<div [hidden]="hideElement">
+		 <img class="rounded mx-auto d-block img-200-200" src="preview" [hidden]="hideElement" >
+			</div>
+			<div class="form-group">
+				<br/>
+				<input type="text" name="titulo" id="titulo" class="form-control" placeholder="Titulo" autocomplete="off" [(ngModel)]="titulo" required>
+			</div>
+			<button type="submit" [disabled]="hideElement" class="btn btn-success" (click)="upload()">Publicar</button>
+			<a class="btn btn-danger" id="btn-cancelar-publicacao" routerLink="/forum">Cancelar</a>
+			
+		</div>
+	</div>
+
+</form>
+
+</div>
+
+

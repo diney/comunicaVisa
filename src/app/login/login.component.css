@@ -1,0 +1,58 @@
+.container{
+margin-top:70px; 
+ 
+   
+
+}
+
+.app-screen{	
+    margin: 70px 35px;  
+       
+}
+
+.login-screen{
+	margin: 70px 35px;
+	color: black !important; 
+      
+}
+
+.justifier{
+    background-color:antiquewhite;
+     border-radius: 8px 8px 8px 8px;
+    padding: 10px 10px 10px 10px;
+}
+
+.user-registration{
+	background-color: #fff(80, 208, 193, 0.51);
+}
+
+.submit-btn{
+	background-color: #fff;
+	color: #000;
+}
+
+.ng-invalid.ng-touched:not(form) {
+	border: 1px solid red;
+
+}
+.overlay{
+    height: 100% !important;
+    width: 100% !important;
+    background-color: rgba(255, 255, 255, 0.82);
+    position: absolute;
+    z-index: 1;
+    text-align: center;
+    padding-top: 250px;
+}
+
+.overlay-display{
+    display: none;
+}
+
+
+
+
+
+
+
+

@@ -1,3 +1,41 @@
-<h1>
-  {{title}}
-</h1>
+
+<nav class="navbar fixed-top navbar-toggleable-md navbar-light bg-faded " *ngIf="mostraMenu">
+  <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+    aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <a class="navbar-brand">COMUNICAVISA</a>
+
+  <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <ul class="navbar-nav mr-auto">
+      <li class="nav-item" routerLinkActive="active">
+        <a class="nav-link" routerLink="/forum">NOTÍCIAS </a>
+      </li>
+      <li class="nav-item" routerLinkActive="active">
+        <a class="nav-link" routerLink="/chat">CHAT</a>
+      </li>   
+      <li class="nav-item" routerLinkActive="active">
+        <a class="nav-link" routerLink="/forumPrincipal">FÓRUM</a>
+      </li> 
+       <li class="nav-item" routerLinkActive="active">
+        <a class="nav-link" routerLink="/diarias">SOLICITAÇÃO DE DIÁRIAS</a>
+      </li>    
+    </ul>
+
+    <form class="form-inline my-2 my-lg-0">
+      <button class="btn btn-outline-success my-2 my-sm-0" routerLink="/publicar">Post</button>
+     
+      
+       
+    </form>
+    
+  </div>
+ 
+
+</nav>
+<div class="container-fluid">
+
+  <router-outlet>
+    
+  </router-outlet>
+</div>
