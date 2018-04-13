@@ -8,10 +8,10 @@ import { Observable } from "rxjs/Observable";
 import { DiariaService } from "../diaria.service";
 
 import { ChatService } from './../chat.service';
-//var pdfMake = require('pdfmake/build/pdfmake.js');
-//var pdfFonts = require('pdfmake/build/vfs_fonts.js');
+
 let jsPDF = require('jspdf');
-let rasterizeHTML = require('rasterizeHTML');
+require('jspdf-autotable');
+//let rasterizeHTML = require('rasterizeHTML');
 
 declare var jquery: any;
 declare var $: any;
@@ -22,8 +22,7 @@ declare var $: any;
   providers: [DiariaService]
 })
 export class DiariasComponent implements OnInit {
-
-
+  objDaViagem: string = '';
   vinculo: any;
   municipio: any;
   cargo: any;
@@ -51,12 +50,16 @@ export class DiariasComponent implements OnInit {
   agencia: string;
   funcao: string;
 
+  //controlar botão 'ADICIONAR DESLOCAMENTO'
+  formDeslocamento: string = 'disabled'
+
+
   meioTrans = [
     { nome: 'Selecione...' },
-    { nome: 'VEÍCULO OFICIAL' },
-    { nome: 'VEÍCULO PRÓPRIO' },
-    { nome: 'ÔNIBUS' },
-    { nome: 'AVIÃO' }
+    { nome: 'Veículo Oficial' },
+    { nome: 'Veículo Próprio' },
+    { nome: 'Ônibus' },
+    { nome: 'Avião' }
   ];
 
   deslocamento = new Deslocamento(this.startDate, '', 'cidadePartida', 0, 'estadoDestino', 'cidadeDestino', 0, 1)
@@ -65,7 +68,7 @@ export class DiariasComponent implements OnInit {
 
   estado: Array<any> = ESTADO
   cidadesPartida: Array<any> = [];
-  cd: Array<any> = [];
+  //cd: Array<any> = [];
   cidadesDestino: Array<any> = [];
   deslocamentoTabela: Array<any> = [];
   novoDeslocamento: Deslocamento
@@ -92,17 +95,13 @@ export class DiariasComponent implements OnInit {
   }
 
   ngOnInit() {
-
-    //this.teste= true;
     this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
     this.token = this.currentUser.token;// your token
     this.userId = this.token.userId;
     this.chatService.userSessionCheck(this.userId, (error, response) => {
-
       if (error) {
         console.log(error)
       } else {
-
         this.nome = (response.nome === undefined) ? " " : response.nome;
         this.cpf = (response.cpf === undefined) ? " " : response.cpf;
         this.funcao = (response.funcao === undefined) ? " " : response.matricula;
@@ -117,12 +116,23 @@ export class DiariasComponent implements OnInit {
         this.grupo = (response.grupo === undefined) ? " " : response.grupo;
 
       }
-    })
-
+    });
 
     this.transporte = this.meioTrans[0].nome;
     this.estadoPartida = this.estado[0].sigla;
     this.estadoDestino = this.estado[0].sigla;
+  }
+
+  public habilitaForm() {
+    if (this.cidadePartida !== "undefined" &&
+      this.horaPartida !== "undefined" &&
+      this.cidadeDestino !== "undefined" &&
+      this.horaDestino !== "undefined" &&
+      this.transporte !== "Selecione...") {
+      this.formDeslocamento = ''
+    } else {
+      this.formDeslocamento = 'disabled'
+    }
   }
 
   adicionarDeslocamento(deslocamentoForm: NgForm): void {
@@ -153,8 +163,8 @@ export class DiariasComponent implements OnInit {
     this.municipiosDestino.subscribe(
       (municipios: any[]) => this.cidadesDestino = municipios
     )
+    this.formDeslocamento = 'disabled';
   }
-
   set humanDate(e) {
     e = e.split('-');
     let d = new Date(Date.UTC(e[0], e[1] - 1, e[2]));
@@ -175,7 +185,6 @@ export class DiariasComponent implements OnInit {
   }
 
   public pesquisaCidadePartida(partida: any): void {
-
     for (let entry of this.estado) {
       if (entry.sigla == partida) {
         this.estadoBuscaPartida = entry.id
@@ -188,7 +197,6 @@ export class DiariasComponent implements OnInit {
   }
 
   public pesquisaCidadeDestino(destino: any): void {
-
     for (let entry of this.estado) {
       if (entry.sigla == destino) {
         this.estadoBuscaDestino = entry.id
@@ -200,157 +208,227 @@ export class DiariasComponent implements OnInit {
     )
 
   }
+  //update user
+  public atualizaCargo(cargo: string): void {
+    this.cargo = cargo;
+  }
+  public atualizaMatricula(matricula: string): void {
+    this.matricula = matricula;
+  }
+  public atualizaVinculo(vinculo: string): void {
+    this.vinculo = vinculo;
+  }
+  public atualizaGrupo(grupo: string): void {
+    this.grupo = grupo;
+  }
+  public atualizaLocal(local: string): void {
+    this.local = local;
+  }
+  public atualizaMunicipio(municipio: string): void {
+    this.municipio = municipio;
+  }
+  public atualizaBanco(banco: string): void {
+    this.banco = banco;
+  }
+  public atualizaAgencia(agencia: string): void {
+    this.agencia = agencia;
+  }
+  public atualizaConta(conta: string): void {
+    this.conta = conta;
+  }
 
-  public teste1(): void {
+  public atualizaObjViagem(objDaViagem: string): void {
+
+    this.objDaViagem = objDaViagem;
+    console.log(objDaViagem)
+  }
+
+  public atualizaCidadePartida(cidadePartida: string): void {
+    this.cidadePartida = cidadePartida;
+    if (this.cidadePartida.length > 0) {
+      this.cidadePartida = cidadePartida;
+    } else {
+      this.cidadePartida = "undefined";
+    }
+    this.habilitaForm()
+  }
+
+  public atualizaMeioTranp(meioTransp: string): void {
+    this.transporte = meioTransp;
+    if (this.transporte.length > 0) {
+      this.transporte = meioTransp;
+    } else {
+      this.transporte = "undefined";
+    }
+    this.habilitaForm()
+  }
+
+  public atualizaHp(horaPartida: string): void {
+    this.horaPartida = horaPartida
+    if (this.horaPartida.length > 0) {
+      this.horaPartida = horaPartida;
+    } else {
+      this.horaPartida = "undefined";
+    }
+    this.habilitaForm()
+  }
+  public atualizaCidadeDestino(cidadeDestino: string): void {
+    this.cidadeDestino = cidadeDestino;
+    if (this.cidadeDestino.length > 0) {
+      this.cidadeDestino = cidadeDestino;
+    } else {
+      this.cidadeDestino = "undefined";
+    }
+    this.habilitaForm()
+  }
+
+  public atualizaHd(horaDestino: string): void {
+    this.horaDestino = horaDestino
+    if (this.horaDestino.length > 0) {
+      this.horaDestino = horaDestino;
+    } else {
+      this.horaDestino = "undefined";
+    }
+    this.habilitaForm()
+  }
+
+  public geraPdf() {
     var logo = require('assets/images/logos/brasao.png');
+    var doc = new jsPDF('p', 'mm', 'a4');
+    //pega tabela 
+    //var res = doc.autoTableHtmlToJson(document.getElementById("table"));
 
-    var doc = new jsPDF();
-    doc.addImage(logo, 'PNG', 5, 10, 18, 16)
+    doc.addImage(logo, 'PNG', 5, 7, 18, 16)
     doc.setFontSize(12);
+
+    doc.setFont("helvetica");
+    doc.setFontType("bold");
     doc.text(23, 20, 'Estado de Santa Catarina');
     doc.text(150, 20, 'Solicitação de Diárias');
-    doc.text(10, 33, 'Nome');
-    doc.text(150, 33, 'CPF');
-    doc.text(10, 50, 'Cargo/Emprego');
-    doc.text(50, 50, 'Matricula');
-    doc.text(90, 50, 'Vínculo');
-    doc.text(150, 50, 'Grupo');
-    doc.text(10, 60, 'Local do Exercicio');
-    doc.text(90, 60, 'Município');
-    doc.text(10, 70, 'Banco');
-    doc.text(65, 70, 'Agência(com dígito)');
-    doc.text(150, 70, 'Conta Corrente (com dígito)');
+    doc.setDrawColor(0)
+    //primeira linha
+    doc.text(10, 30, 'Nome');
+    doc.rect(9, 26, 141, 10);
 
+    doc.text(151, 30, 'CPF');
+    doc.rect(150, 26, 45, 10);
+    //segunda linha
+    doc.text(10, 40, 'Cargo/Emprego');
+    doc.rect(9, 36, 66, 10);
 
-    //set fonte  value do obj
-    doc.setFont("times");
-    doc.setFontType("italic");
+    doc.text(76, 40, 'Matricula');
+    doc.rect(75, 36, 40, 10);
 
-    doc.text(10, 40, this.nome);
-    doc.text(150, 40, this.cpf);
-    doc.text(10, 55, this.cargo);
-    doc.text(50, 55, this.matricula);
-    doc.text(90, 55, this.vinculo);
-    doc.text(150, 55, this.grupo);
-    doc.text(10, 65, this.local);
-    doc.text(90, 65, this.municipio);
-    doc.text(10, 75, this.banco);
-    doc.text(65, 75, this.agencia);
-    doc.text(150, 75, this.conta)
+    doc.text(116, 40, 'Vínculo');
+    doc.rect(115, 36, 45, 10);
 
+    doc.text(161, 40, 'Grupo');
+    doc.rect(160, 36, 35, 10);
 
-    doc.addPage(); // add new page in pdf  
-    // doc.setTextColor(165, 0, 0);
-    //doc.text(150, 20, 'extra page to write');
+    //terceira linha
+    doc.text(10, 50, 'Local do Exercicio');
+    doc.rect(9, 46, 80, 10);
 
-    doc.save('katara.pdf'); // Save the PDF with name "katara"...  
+    doc.text(90, 50, 'Município');
+    doc.rect(89, 46, 106, 10)
+    //quarta  linha
+    doc.text(10, 60, 'Banco');
+    doc.rect(9, 56, 65, 10);
 
-    // doc.setFont("courier");
-    //var element = document.getElementById('customers');
-    //var options = {
-    //pagesplit: true,
-    // background: '#f8f8ff' 
-    //  }
-    // doc.fromHTML(element, options, function() {
-    // doc.autoPrint();
-    // doc.save('web.pdf');
+    doc.text(75, 60, 'Agência(com dígito)');
+    doc.rect(74, 56, 60, 10);
+
+    doc.text(135, 60, 'Conta Corrente (com dígito)');
+    doc.rect(134, 56, 61, 10);
 
 
 
-  }
+    doc.setFontSize(10);
+
+
+    //primeira linha
+    doc.text(10, 35, this.nome);
+    doc.text(151, 35, this.cpf);
+    //segunda linha
+    doc.text(10, 45, this.cargo);
+    doc.text(76, 45, this.matricula);
+    doc.text(116, 45, this.vinculo);
+    doc.text(150, 45, this.grupo);
+    //terceira linha
+    doc.text(10, 55, this.local);
+    doc.text(90, 55, this.municipio);
+    //quarta  linha
+    doc.text(10, 65, this.banco);
+    doc.text(75, 65, this.agencia);
+    doc.text(135, 65, this.conta);
+    // final retangulo dados pessoais
+    doc.text(10, 71, 'DESLOCAMENTOS');
 
 
 
-  // $(document).ready(function(){
-  // $('#btnPDF').click(function() {
-  //  savePDF(document.querySelector('#customers'));
-  //});
-  //});
+    var options = {
+      theme: 'grid',
+      margin: {
+        top: 72,
+        left: 9
 
-  //function savePDF(codigoHTML) {
-  //var doc = new jsPDF('portrait', 'pt', 'a4'),
-  ///  data = new Date();
-  //var margins = {
-  // top: 20,
-  //bottom: 20,
-  // left: 20,
-  // width: 1000
-  // };
-  //doc.fromHTML(codigoHTML,
-  //      margins.left, // x coord
-  //     margins.top, { pagesplit: true },
-  ///     function(dispose){
-  // doc.save("Relatorio - "+data.getDate()+"/"+data.getMonth()+"/"+data.getFullYear()+".pdf");
-  //});
-  //}
-
-  //var doc = new jsPDF('p', 'pt', 'letter');
-  //doc.canvas.height = 72 * 11;
-  //doc.canvas.width = 72 * 8.5;
-  //doc.setFont("courier");
-
-  //var element = document.getElementById('customers');
-  //var options = {
-  //	pagesplit: true,
-  //background: '#fff',  
-  //}
-  //doc.addHTML(element, options, function() {
-  // doc.save('web.pdf');
-
-
-
-  // })
-  //  }
-
-
-  //var pdf = new jsPDF('p', 'pt', 'letter');
-  //pdf.canvas.height = 72 * 11;
-  // pdf.canvas.width = 72 * 8.5;
-
-  //pdf.addHTML(document.body);
-
-  // pdf.save('test.pdf');
-
-  //var doc = new jsPDF('p', 'pt', 'letter');
-
-
-  ///doc.fromHTML(element, options, document.getElementById('table'),function() {
-
-  //  doc.save('web.pdf')
-  //}
-  //)
-
-  public buildTableBody(data, columns) {
-    var body = [];
-
-    body.push(columns);
-    for (var row of data) {
-      var dataRow = [];
-      for (var column of columns) {
-
-        dataRow.push(row, column);
-      }
-
-      body.push(dataRow);
+      },
     };
+    var columns = ["DATA", "CIDADE PARTIDA", "HORÁRIO", "CIDADE DESTINO", "HORÁRIO", "MEIO DE TRANSPORTE"]
+    let newTable = [];
+    for (var i = 0; i < this.deslocamentoTabela.length; i++) {
+      var parse = [
+        this.deslocamentoTabela[i].data,
+        this.deslocamentoTabela[i].cidadePartida + "/" + this.deslocamentoTabela[i].estadoPartida,
+        this.deslocamentoTabela[i].horaPartida,
+        this.deslocamentoTabela[i].cidadeDestino + "/" + this.deslocamentoTabela[i].estadoDestino,
+        this.deslocamentoTabela[i].horaDestino,
+        this.deslocamentoTabela[i].meioTransp
+      ]
+      newTable.push(parse)
+    }
 
-    return body;
+    doc.autoTable(columns, newTable, options, );
+
+    //posiciona texto abaixo da tabela dinâmica
+    let finalY = doc.autoTable.previous.finalY + 4;
+
+    doc.text(10, finalY, '(*)No caso de uso de passagens é obrigatória a devolução dos respectivos bilhetes.');
+    doc.text(10, finalY + 5, 'OBJETIVO DA VIAGEM');
+    doc.text(11, finalY + 10, this.objDaViagem);
+    doc.setDrawColor(0)
+    doc.rect(9, finalY + 6, 187, 20);
+    doc.text(10, finalY + 30, 'DECLARAÇÃO DO SERVIDOR OU RESPONSÁVEL');
+    doc.text(10, finalY + 36, 'Declaro, ainda que não me enquadro em qualquer das situções impeditivas para o recebimento de diárias');
+    doc.rect(9, finalY + 32, 187, 5);
+    doc.text(10, finalY + 41, 'LOCAL E DATA');
+    doc.rect(9, finalY + 38, 100, 12);
+    doc.text(110, finalY + 41, 'IDENTIFICAÇÃO E ASSINATURA');
+    doc.rect(109, finalY + 38, 87, 12);
+    doc.text(10, finalY + 54, 'AUTORIZAÇÃO DA CHEFIA IMEDIATA ');
+    doc.rect(9, finalY + 55, 100, 12);
+    doc.text(110, finalY + 54, 'AUTORIZAÇÃO DA DIRETORIA ');
+    doc.rect(109, finalY + 55, 87, 12);
+    doc.setFontSize(9);
+    doc.text(10, finalY + 71, 'AUTORIZAÇÃO DA DIRETORIA RESPONSÁVEL PELO PAGAMENTO DE DIÁRIAS (DIRETORIA GERAL OU EQUIVALENTE)');
+
+
+    //iframe mosta pdf
+    var string = doc.output('datauristring');
+    var iframe = "<iframe width='100%' height='100%' src='" + string + "'></iframe>"
+    var x = window.open();
+    x.document.open();
+    x.document.write(iframe);
+    x.document.close();
   }
-
-  public table(data, columns) {
-
-    return {
-      table: {
-        headerRows: 1,
-        body: this.buildTableBody(data, columns)
-      }
-    };
+  public delete() {
   }
-
-
-
-
-
-
-
 }
+
+
+
+
+
+
+
+
