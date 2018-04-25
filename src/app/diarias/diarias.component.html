@@ -32,65 +32,117 @@
     <form #deslocamentoForm="ngForm" (ngSubmit)="adicionarDeslocamento(deslocamentoForm)" class="diney">
       <div class="form-row" style="background: #FAFAFA; padding: 20px; border-bottom: solid 1px #F0F0F0">
         <div class="row">
-          <div class="form-group col-sm-9">
-            <label for="nome">NOME</label>
-            <input type="text" class="form-control is-invalid" [value]="nome" name="nome" id="nome" placeholder="NOME">
-          </div>
           <div class="form-group col-sm-3">
             <label for="vpf">CPF</label>
-            <input type="text" class="form-control is-invalid" [value]="cpf" name="cpf" placeholder="CPF">
+            <input type="text" class="form-control is-invalid" [(ngModel)]="cpf" name="cpf" placeholder="CPF">
           </div>
-        </div>
-        <div class="row">
-          <div class="form-group col-sm-5">
-            <label for="cargo/emprego">CARGO/EMPREGO</label>
-            <input type="text" class="form-control is-invalid" [value]="cargo" name="cargo" #inputCargo (input)="atualizaCargo(inputCargo.value)"
-              placeholder="CARGO/EMPREGO">
-          </div>
-          <div class="form-group col-sm-2">
-            <label for="matricula">MATRÍCULA</label>
-            <input type="text" class="form-control is-invalid" [value]="matricula" name="matricula" #inputMatricula (input)="atualizaMatricula(inputMatricula.value)"
-              placeholder="MATRÍCULA">
+          <div class="form-group col-sm-6">
+            <label for="nome">NOME</label>
+            <input type="text" class="form-control is-invalid" [(ngModel)]="nome" name="nome" id="nome" placeholder="NOME">
           </div>
           <div class="form-group col-sm-3">
-            <label for="vinculo">VÍNCULO</label>
-            <input type="text" class="form-control is-invalid" [value]="vinculo" name="vinculo" #inputVinculo (input)="atualizaVinculo(inputVinculo.value)"
-              placeholder="VÍNCULO">
-          </div>
-          <div class="form-group col-sm-2">
-            <label for="grupo">GRUPO</label>
-            <input type="text" class="form-control is-invalid" [value]="grupo" #inputGrupo (input)="atualizaGrupo(inputGrupo.value)"
-              placeholder="GRUPO" name="grupo">
+            <label for="matricula">MATRÍCULA</label>
+            <input type="text" class="form-control is-invalid" [(ngModel)]="matricula" name="matricula" placeholder="MATRÍCULA">
           </div>
         </div>
         <div class="row">
           <div class="form-group col-sm-6">
-            <label for="local">LOCAL DO EXERCÍCIO</label>
-            <input type="text" class="form-control is-invalid" [value]="local" name="local" #inputLocal (input)="atualizaLocal(inputLocal.value)"
-              placeholder="LOCAL DO EXERCÍCIO">
+            <label for="local">LOCAL DE TRABALHO (LOTAÇÃO)</label>
+            <input type="text" class="form-control is-invalid" [(ngModel)]="local" name="local" placeholder="LOCAL DO EXERCÍCIO">
           </div>
           <div class="form-group col-sm-6">
-            <label for="municipio">MUNÍCIPIO</label>
-            <input type="text" class="form-control is-invalid" [value]="municipio" name="municipio" #inputMunicipio (input)="atualizaMunicipio(inputMunicipio.value)"
-              placeholder="MUNÍCIPIO">
+            <label for="municipio">MUNÍCIPIO DO LOCAL DE TRABALHO</label>
+            <input type="text" class="form-control is-invalid" [(ngModel)]="municipio" name="municipio" placeholder="MUNÍCIPIO">
           </div>
-
         </div>
+        <div class="row">
+          <div class="form-group col-sm-4">
+            <label for="cargo">CARGO/EMPREGO</label>
+            <input type="text" class="form-control is-invalid" [(ngModel)]="cargo" name="cargo" placeholder="CARGO/EMPREGO">
+          </div>
+          <div class="form-group col-sm-4">
+            <label for="competencia">COMPETÊNCIA</label>
+            <input type="text" class="form-control is-invalid" [(ngModel)]="competencia" name="competencia" placeholder="COMPETÊNCIA">
+          </div>
+          <div class="form-group col-sm-4">
+            <label for="email">E-MAIL</label>
+            <input type="text" class="form-control is-invalid" [(ngModel)]="email" name="email" placeholder="E-MAIL">
+          </div>
+        </div>
+        <div class="row">
+          <div class="form-group">
+            <label class="col-sm-12 control-label">CÓDIGO DO CARGO/FUNÇÃO OCUPADA</label>
+            <div class="col-sm-12">
+              <label class="radio-inline">
+                 <input type="radio" name="radio" #1 (change)="handleChange(1)"  value="1" > DGS-1
+              </label>
+              <label class="radio-inline">
+                 <input type="radio" name="radio"  #2 (change)="handleChange(2)"  value="2"  > DGS-2
+              </label>
+              <label class="radio-inline">
+                <input type="radio" name="radio" #3 (change)="handleChange(3)" value="3"  > DGS-3
+              </label>
+              <label class="radio-inline">
+                <input type="radio" name="radio" #4 (change)="handleChange(4)" value="4" > FTG-1
+             </label>
+              <label class="radio-inline">
+                <input type="radio" name="radio" #5 (change)="handleChange(5)" value="5"> FTG-2
+             </label>
+              <label class="radio-inline">
+                <input type="radio" name="radio" #6 (change)="handleChange(6)"value="6" > FTG-3                
+             </label>
+              <label class="radio-inline">
+                <input type="radio" name="radio" #7 (change)="handleChange(7)" value="7" > FG-1               
+             </label>
+              <label class="radio-inline">
+                <input type="radio" name="radio" #8 (change)="handleChange(8)" value="8" > FG-2              
+             </label>
+              <label class="radio-inline">
+                <input type="radio" name="radio" #9 (change)="handleChange(9)" value="9"> FG-3             
+             </label>
+
+            </div>
+            <div class="col-sm-12">
+              <label class="radio-inline">
+                <input type="radio" name="radio" #10 (change)="handleChange(10)" value="10"> DGI-1(CODIFICADO)                
+             </label>
+              <label class="radio-inline">
+                <input type="radio" name="radio" #11 (change)="handleChange(11)" value="11" > ADM SUPERIOR-3 (AGENTE POLÍTICO)               
+             </label>
+              <label class="radio-inline">
+               <input type="radio" name="radio" #12 (change)="handleChange(12)" value="12" > ADM SUPERIOR-8 ( NÃO CONFIRMADO)                
+             </label>
+
+            </div>
+            <div class="col-sm-12">
+
+              <label class="radio-inline">
+                <input type="radio" name="radio" id="qual" #13 (change)="qualChange(13)" value="13" > OUTRO QUAL?
+             </label>
+              <div class="form-group col-sm-10">
+
+
+                <div *ngIf=teste>
+                  <input type="text" class="form-control is-invalid" [(ngModel)]="qual" name="qual">
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+
         <div class="row">
           <div class="form-group col-sm-4">
             <label for="banco">BANCO</label>
-            <input type="text" class="form-control is-invalid" [value]="banco" name="banco" #inputBanco (input)="atualizaBanco(inputBanco.value)"
-              placeholder="BANCO">
+            <input type="text" class="form-control is-invalid" [(ngModel)]="banco" name="banco" placeholder="BANCO">
           </div>
           <div class="form-group col-sm-4">
             <label for="agencia">AGÊNCIA (com digito)</label>
-            <input type="text" class="form-control is-invalid" [value]="agencia" name="agencia" #inputAgencia (input)="atualizaAgencia(inputAgencia.value)"
-              placeholder="AGÊNCIA (com digito)">
+            <input type="text" class="form-control is-invalid" [(ngModel)]="agencia" name="agencia" placeholder="AGÊNCIA (com digito)">
           </div>
           <div class="form-group col-sm-4">
             <label for="conta">CONTA CORRENTE (com dígito)</label>
-            <input type="text" class="form-control is-invalid" [value]="conta" name="conta" #inputConta (input)="atualizaConta(inputConta.value)"
-              placeholder="CONTA CORRENTE (com dígito)">
+            <input type="text" class="form-control is-invalid" [(ngModel)]="conta" name="conta" placeholder="CONTA CORRENTE (com dígito)">
           </div>
 
         </div>
@@ -110,14 +162,13 @@
           </div>
           <div class="form-group col-sm-2">
             <label for="estadoPartida">UF</label>
-            <select class="form-control custom-select" [(ngModel)]="estadoPartida" required #partida (click)=" pesquisaCidadePartida(partida.value)"
-              name="estadoPartida">          
+            <select class="form-control custom-select" [(ngModel)]="estadoPartida" required name="estadoPartida" (change)="habilitaForm()">          
               <option  *ngFor ="let estado of estado"  > {{ estado.sigla}} </option>          
             </select>
           </div>
           <div class="form-group col-sm-5">
             <label for="cidadePartida">MUNÍCIPIO</label>
-            <select class="form-control custom-select" required name="cidadePartida" [(ngModel)]="cidadePartida" #cidadeP (change)="atualizaCidadePartida(cidadeP.value)"> 
+            <select class="form-control custom-select" required name="cidadePartida" [(ngModel)]="cidadePartida" (change)="habilitaForm()"> 
                 <option  value="" >Selecione</option>              
                 <option *ngFor ="let c of cidadesPartida">{{c.nome}}</option>             
               </select>
@@ -125,8 +176,8 @@
           </div>
           <div class="form-group col-sm-2">
             <label for="horaPartida">HORÁRIO</label>
-            <input class="form-control custom-select" id="timePartida" type="time" [(ngModel)]="horaPartida" #horaP (input)="atualizaHp(horaP.value)"
-              required name="horaPartida">
+            <input class="form-control custom-select" id="timePartida" type="time" [(ngModel)]="horaPartida" required name="horaPartida"
+              (change)="habilitaForm()">
           </div>
 
         </div>
@@ -136,8 +187,7 @@
 
           <div class="form-group col-sm-2">
             <label for="estadoDestino">UF</label>
-            <select class="form-control custom-select" [(ngModel)]="estadoDestino" required #destino (click)=" pesquisaCidadeDestino(destino.value)"
-              name="estadoDestino">
+            <select class="form-control custom-select" [(ngModel)]="estadoDestino" required name="estadoDestino" (change)="habilitaForm()">
               
               <option *ngFor ="let estado of estado"  >{{estado.sigla}}</option>
           
@@ -145,20 +195,20 @@
           </div>
           <div class="form-group col-sm-4">
             <label for="cidadePartida">MUNÍCIPIO</label>
-            <select class="form-control custom-select" required name="cidadeDestino" [(ngModel)]="cidadeDestino" #cidadeD (change)="atualizaCidadeDestino(cidadeD.value)"> 
+            <select class="form-control custom-select" required name="cidadeDestino" [(ngModel)]="cidadeDestino" (change)="habilitaForm()"> 
                 <option  value="" >Selecione</option>              
-                <option *ngFor ="let c of cidadesDestino"   >{{c.nome}}</option>             
+                <option *ngFor ="let c of cidadesDestino">{{c.nome}}</option>             
               </select>
           </div>
           <div class="form-group col-sm-2">
             <label for="horaDestino">HORÁRIO</label>
-            <input id="timeDestino" class="form-control custom-select" type="time" name="time" [(ngModel)]="horaDestino" #horaD (input)="atualizaHd(horaD.value)"
-              required name="horaDestino">
+            <input id="timeDestino" class="form-control custom-select" type="time" name="time" [(ngModel)]="horaDestino" required name="horaDestino"
+              (change)="habilitaForm()">
 
           </div>
           <div class="form-group col-sm-4">
             <label for="meioTransp">MEIO DE TRANSPORTE</label>
-            <select class="form-control custom-select" [(ngModel)]="transporte" required name="meioTransp" #transport (change)="atualizaMeioTranp(transport.value)">         
+            <select class="form-control custom-select" [(ngModel)]="transporte" required name="meioTransp" (change)="habilitaForm()">         
               <option *ngFor ="let c of meioTrans" >{{c.nome}}</option>            
             </select>
           </div>
@@ -208,72 +258,9 @@
     </div>
     <h6>OBJETIVO DA VIAGEM</h6>
     <div class="form-row" style="background: #FAFAFA; padding: 20px; border-bottom: solid 1px #F0F0F0">
-      <div class="form-group col-md-12">
-        <textarea rows="3" type="text" class="form-control"  name="objetivoDaViagem" #inputObjV (input)="atualizaObjViagem(inputObjV.value)"></textarea>
+      <div class="form-group col-md-8">
+        <textarea rows="3" type="text" class="form-control" name="objetivoDaViagem" #inputObjV (input)="atualizaObjViagem(inputObjV.value)"></textarea>
       </div>
-    </div>
-  </div>
-
-  <h6>DECLARAÇÃO DO SERVIDOR OU RESPONSÁVEL</h6>
-
-  <div class="form-row" style="background: #FAFAFA; padding: 20px; border-bottom: solid 1px #F0F0F0">
-
-    <div class="form-group col-md-12">
-      <p>Declaro, ainda que não me enquadro em qualquer das situções impeditivas para o recebimento de diárias</p>
-
-    </div>
-    <div class="row">
-      <div class="form-group col-md-6">
-        <label for="data">DATA E LOCAL</label>
-        <input type="text" class="form-control" id="data">
-      </div>
-      <div class="form-group col-md-6">
-        <label for="pwd">IDENTTIFICAÇÃO E ASSINATURA</label>
-        <input type="text" class="form-control" id="pwd">
-      </div>
-    </div>
-  </div>
-
-
-  <div class="form-row" style="background: #FAFAFA; padding: 20px; border-bottom: solid 1px #F0F0F0">
-
-
-
-    <div class="row">
-      <div class="form-group col-md-6">
-        <h6>AUTORIZAÇÃO DA CHEFIA IMEDIATA</h6>
-        <label for="u">IDENTIFICAÇÃO E ASSINATURA</label>
-        <input type="text" class="form-control" id="u">
-      </div>
-      <div class="form-group col-md-6">
-        <h6>AUTORIZAÇÃO DA DIRETORIA</h6>
-        <label for="p">IDENTIFICAÇÃO E ASSINATURA</label>
-        <input type="text" class="form-control" id="p">
-      </div>
-    </div>
-  </div>
-
-  <div class="form-row" style="background: #FAFAFA; padding: 20px; border-bottom: solid 1px #F0F0F0">
-
-    <h6>AUTORIZAÇÃO DA DIRETORIA RESPONSÁVEL PELO PAGAMENTO DE DIÁRIAS (DIRETORIA GERAL OU EQUIVALENTE)</h6>
-
-    <div class="row">
-      <div class="form-group col-md-6">
-
-        <label for="u">IDENTIFICAÇÃO E ASSINATURA</label>
-        <input type="text" class="form-control" id="u">
-      </div>
-      <div class="form-group col-md-3">
-
-        <label for="p">DATA</label>
-        <input type="text" class="form-control" id="p">
-      </div>
-      <div class="form-group col-md-3">
-
-        <label for="p">HORÁRIO</label>
-        <input type="text" class="form-control" id="p">
-      </div>
-
     </div>
   </div>
 
