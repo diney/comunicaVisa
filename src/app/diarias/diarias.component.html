@@ -2,224 +2,298 @@
 
 
   <div class="ordem-compra">
-    <form novalidate>
 
 
-      <div class="row">
 
-        <div class=" col-md-1">
+    <div class="row">
+
+      <div class=" col-md-1">
 
 
-          <img src="/assets/images/logos/brasao.png">
-        </div>
-
-        <div class=" col-md-7">
-          <br />
-          <h6>ESTADO DE SANTA CATARINA</h6>
-        </div>
-
-        <div class=" col-md-4">
-          <br />
-          <div class="d-flex justify-content-end">
-            <h6>SOLICITAÇÃO DE DIÁRIAS</h6>
-          </div>
-        </div>
+        <img src="/assets/images/logos/brasao.png">
       </div>
 
-      <hr />
-    </form>
+      <div class=" col-md-7">
+        <br />
+        <h6>ESTADO DE SANTA CATARINA</h6>
+      </div>
+
+      <div class=" col-md-4">
+        <br />
+        <div class="d-flex justify-content-end">
+          <h6>SOLICITAÇÃO DE DIÁRIAS</h6>
+        </div>
+      </div>
+    </div>
+
+    <hr />
+
+
     <h6>SERVIDOR</h6>
-    <form #deslocamentoForm="ngForm" (ngSubmit)="adicionarDeslocamento(deslocamentoForm)" class="diney">
+   
+    <form #deslocamentoForm="ngForm" (ngSubmit)="adicionarDeslocamento(deslocamentoForm)" novalidate>
+
       <div class="form-row" style="background: #FAFAFA; padding: 20px; border-bottom: solid 1px #F0F0F0">
-        <div class="row">
+        <div class="row col-sm-12">
           <div class="form-group col-sm-3">
             <label for="vpf">CPF</label>
-            <input type="text" class="form-control is-invalid" [(ngModel)]="cpf" name="cpf" placeholder="CPF">
+           
+            <input type="text" class="form-control " [(ngModel)]="cpf" name="cpf" #cpfBranco (change)="removerEspaco(cpfBranco.value)" disabled="disabled" placeholder="CPF" minlength="14" maxlength="14" required
+              #inpuCpf="ngModel" minlength="14" maxlength="16" ng-trim="true">
+       
+            <!--<small *ngIf="inpuCpf.valid && inpuCpf.touched && valido " class="form-text text-success">Ok</small>
+            <small *ngIf=" ! inpuCpf.valid  && inpuCpf.touched  " class="form-text text-danger">Cpf inválido</small>
+            <small *ngIf="!inpuCpf.valid  && inpuCpf.untouched " class="form-text text-danger">Informe seu cpf</small>
+             <small *ngIf="!valido && inpuCpf.touched " class="form-text text-danger"></small>-->
+
+
           </div>
+
           <div class="form-group col-sm-6">
             <label for="nome">NOME</label>
-            <input type="text" class="form-control is-invalid" [(ngModel)]="nome" name="nome" id="nome" placeholder="NOME">
+            <input type="text" class="form-control" [(ngModel)]="nome" name="nome" id="nome" disabled="disabled" placeholder="NOME" required minlength="10"
+              maxlength="50" #inputNome="ngModel">
+           <!-- <small *ngIf="inputNome.valid && inputNome.touched" class="form-text text-success">Ok</small>
+            <small *ngIf=" ! inputNome.valid  && inputNome.touched" class="form-text text-danger">Nome inválido</small>
+            <small *ngIf="! inputNome.valid  && inputNome.untouched " class="form-text text-danger">Informe seu nome </small>-->
+
           </div>
           <div class="form-group col-sm-3">
             <label for="matricula">MATRÍCULA</label>
-            <input type="text" class="form-control is-invalid" [(ngModel)]="matricula" name="matricula" placeholder="MATRÍCULA">
+            <input type="text" class="form-control " [(ngModel)]="matricula" name="matricula" disabled="disabled" placeholder="MATRÍCULA" required minlength="7"
+              maxlength="20" #inputMatri="ngModel">
+           <!-- <small *ngIf="inputMatri.valid && inputMatri.touched" class="form-text text-success">Ok</small>
+            <small *ngIf=" ! inputMatri.valid  && inputMatri.touched" class="form-text text-danger">Matrícula inválido</small>
+            <small *ngIf=" ! inputMatri.valid  && inputMatri.untouched" class="form-text text-danger">Informe sua matrícula</small>-->
+
           </div>
         </div>
-        <div class="row">
+        <div class="row col-sm-12">
           <div class="form-group col-sm-6">
             <label for="local">LOCAL DE TRABALHO (LOTAÇÃO)</label>
-            <input type="text" class="form-control is-invalid" [(ngModel)]="local" name="local" placeholder="LOCAL DO EXERCÍCIO">
+            <input type="text" class="form-control " [(ngModel)]="local" name="local" placeholder="LOCAL DO EXERCÍCIO" required minlength="5"
+              maxlength="50" #inputLocalTra="ngModel">
+            <small *ngIf="inputLocalTra.valid && inputLocalTra.touched" class="form-text text-success">Ok</small>
+            <small *ngIf=" ! inputLocalTra.valid  && inputLocalTra.touched" class="form-text text-danger">Local de Trabalho inválido</small>
+            <small *ngIf=" ! inputLocalTra.valid  && inputLocalTra.untouched" class="form-text text-danger">Informe seuLocal de Trabalho </small>
+
           </div>
           <div class="form-group col-sm-6">
             <label for="municipio">MUNÍCIPIO DO LOCAL DE TRABALHO</label>
-            <input type="text" class="form-control is-invalid" [(ngModel)]="municipio" name="municipio" placeholder="MUNÍCIPIO">
+            <input type="text" class="form-control " [(ngModel)]="municipio" name="municipio" placeholder="MUNÍCIPIO" required minlength="5"
+              maxlength="50" #inputMuniTra="ngModel">
+            <small *ngIf="inputMuniTra.valid && inputMuniTra.touched" class="form-text text-success">Ok</small>
+            <small *ngIf=" ! inputMuniTra.valid  && inputMuniTra.touched" class="form-text text-danger">Munícipio de Trabalho inválido</small>
+            <small *ngIf=" ! inputMuniTra.valid  && inputMuniTra.untouched" class="form-text text-danger">Informe seu Munícipio de Trabalho </small>
+
+
           </div>
         </div>
-        <div class="row">
+        <div class="row col-sm-12">
           <div class="form-group col-sm-4">
             <label for="cargo">CARGO/EMPREGO</label>
-            <input type="text" class="form-control is-invalid" [(ngModel)]="cargo" name="cargo" placeholder="CARGO/EMPREGO">
+            <input type="text" class="form-control " [(ngModel)]="cargo" name="cargo" placeholder="CARGO/EMPREGO" required minlength="8"
+              maxlength="50" #inputCargoEmp="ngModel">
+            <small *ngIf="inputCargoEmp.valid && inputCargoEmp.touched" class="form-text text-success">Ok</small>
+            <small *ngIf=" ! inputCargoEmp.valid  && inputCargoEmp.touched" class="form-text text-danger">Cargo/Emprego inválido</small>
+            <small *ngIf=" ! inputCargoEmp.valid  && inputCargoEmp.untouched" class="form-text text-danger">Informe seu Cargo/Emprego </small>
+
           </div>
           <div class="form-group col-sm-4">
             <label for="competencia">COMPETÊNCIA</label>
-            <input type="text" class="form-control is-invalid" [(ngModel)]="competencia" name="competencia" placeholder="COMPETÊNCIA">
+            <popover-content #myNovo [closeOnClickOutside]="true">
+              <span style="color: #C21F39">Campo de uso exclusivo de servidor efetivo da secretaria de estado da saúde. Sendo:
+                                                cargo/emprego= analista técnico em gestão de saúde; competência = Ex: Médico.
+                                                A informação pode ser obtida no portal do servidor. <a target="_blank" [href]=" outputPath ">aqui</a>
+                                                 "Acesso as consultas do servidor - CLICAR EM FUNCIONAL"  </span>
+            </popover-content>
+
+            <a class="maosinha" [popover]="myNovo" [popoverOnHover]="false"><img src="/assets/images/logos/interrogação.png"></a>
+
+            <input type="text" class="form-control  " [(ngModel)]="competencia" name="competencia" placeholder="COMPETÊNCIA">
+
           </div>
           <div class="form-group col-sm-4">
             <label for="email">E-MAIL</label>
-            <input type="text" class="form-control is-invalid" [(ngModel)]="email" name="email" placeholder="E-MAIL">
+            <input type="text" class="form-control " [(ngModel)]="email" #inputEmail="ngModel" name="email" placeholder="E-MAIL" pattern="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,6})+$"
+              required>
+            <small *ngIf="inputEmail.valid && inputEmail.touched" class="form-text text-success">Ok</small>
+            <small *ngIf=" ! inputEmail.valid  && inputEmail.touched" class="form-text text-danger">Email inválido</small>
+            <small *ngIf=" ! inputEmail.valid  && inputEmail.untouched" class="form-text text-danger">Informe seu email</small>
+
           </div>
         </div>
         <div class="row">
+          <div class="form-group col-sm-8 ">
+            <label>CÓDIGO DO CARGO/FUNÇÃO OCUPADA</label>
+            <popover-content #myPopover [closeOnClickOutside]="true">
+              <span style="color: #C21F39">Campo obrigatório a ser preenchido por servidor que não ocupa cargo efetivo.</span>
+            </popover-content>
+            <a class="maosinha" [popover]="myPopover" [popoverOnHover]="false"><img src="/assets/images/logos/interrogação.png"></a>
+          </div>
+
           <div class="form-group">
-            <label class="col-sm-12 control-label">CÓDIGO DO CARGO/FUNÇÃO OCUPADA</label>
+
             <div class="col-sm-12">
               <label class="radio-inline">
-                 <input type="radio" name="radio" #1 (change)="handleChange(1)"  value="1" > DGS-1
+                 <input type="radio" name="radio"  #0 (change)="handleChange(0)"  value="0" > DGS-1
               </label>
               <label class="radio-inline">
-                 <input type="radio" name="radio"  #2 (change)="handleChange(2)"  value="2"  > DGS-2
+                 <input type="radio" name="radio"  #1 (change)="handleChange(1)"  value="1"  > DGS-2
               </label>
               <label class="radio-inline">
-                <input type="radio" name="radio" #3 (change)="handleChange(3)" value="3"  > DGS-3
+                <input type="radio" name="radio" #2 (change)="handleChange(2)" value="2"  > DGS-3
               </label>
               <label class="radio-inline">
-                <input type="radio" name="radio" #4 (change)="handleChange(4)" value="4" > FTG-1
+                <input type="radio" name="radio" #3 (change)="handleChange(3)" value="3" > FTG-1
              </label>
               <label class="radio-inline">
-                <input type="radio" name="radio" #5 (change)="handleChange(5)" value="5"> FTG-2
+                <input type="radio" name="radio" #4 (change)="handleChange(4)" value="4"> FTG-2
              </label>
               <label class="radio-inline">
-                <input type="radio" name="radio" #6 (change)="handleChange(6)"value="6" > FTG-3                
+                <input type="radio" name="radio" #5 (change)="handleChange(5)"value="5" > FTG-3                
              </label>
               <label class="radio-inline">
-                <input type="radio" name="radio" #7 (change)="handleChange(7)" value="7" > FG-1               
+                <input type="radio" name="radio" #6 (change)="handleChange(6)" value="6" > FG-1               
              </label>
               <label class="radio-inline">
-                <input type="radio" name="radio" #8 (change)="handleChange(8)" value="8" > FG-2              
+                <input type="radio" name="radio" #7 (change)="handleChange(7)" value="7" > FG-2              
              </label>
               <label class="radio-inline">
-                <input type="radio" name="radio" #9 (change)="handleChange(9)" value="9"> FG-3             
+                <input type="radio" name="radio" #8 (change)="handleChange(8)" value="8"> FG-3             
              </label>
 
             </div>
             <div class="col-sm-12">
               <label class="radio-inline">
-                <input type="radio" name="radio" #10 (change)="handleChange(10)" value="10"> DGI-1(CODIFICADO)                
+                <input type="radio" name="radio" #9 (change)="handleChange(9)" value="9"> DGI-1(CODIFICADO)                
              </label>
               <label class="radio-inline">
-                <input type="radio" name="radio" #11 (change)="handleChange(11)" value="11" > ADM SUPERIOR-3 (AGENTE POLÍTICO)               
+                <input type="radio" name="radio" #10 (change)="handleChange(10)" value="10" > ADM SUPERIOR-3 (AGENTE POLÍTICO)               
              </label>
               <label class="radio-inline">
-               <input type="radio" name="radio" #12 (change)="handleChange(12)" value="12" > ADM SUPERIOR-8 ( NÃO CONFIRMADO)                
+               <input type="radio" name="radio" #11 (change)="handleChange(11)" value="11" > ADM SUPERIOR-8 ( NÃO CONFIRMADO)                
              </label>
 
             </div>
             <div class="col-sm-12">
 
               <label class="radio-inline">
-                <input type="radio" name="radio" id="qual" #13 (change)="qualChange(13)" value="13" > OUTRO QUAL?
+                <input type="radio" name="radio" id="qual" #12 (change)="qualChange(12)" value="12" > OUTRO QUAL?
              </label>
               <div class="form-group col-sm-10">
-
-
                 <div *ngIf=teste>
-                  <input type="text" class="form-control is-invalid" [(ngModel)]="qual" name="qual">
+                  <input type="text" class="form-control " [(ngModel)]=" outroQual" placeholder="Especifique aqui" name=" outroQual">
                 </div>
               </div>
             </div>
           </div>
         </div>
-
-
-        <div class="row">
+        <div class="row col-sm-12">
           <div class="form-group col-sm-4">
             <label for="banco">BANCO</label>
-            <input type="text" class="form-control is-invalid" [(ngModel)]="banco" name="banco" placeholder="BANCO">
+            <input type="text" class="form-control " [(ngModel)]="banco" name="banco" placeholder="BANCO" required minlength="5" maxlength="50"
+              #inputBanco="ngModel">
+            <small *ngIf="inputBanco.valid && inputBanco.touched" class="form-text text-success">Ok</small>
+            <small *ngIf=" ! inputBanco.valid  && inputBanco.touched" class="form-text text-danger">Banco inválido</small>
+            <small *ngIf=" ! inputBanco.valid  && inputBanco.untouched" class="form-text text-danger">Infrome sue banco</small>
+
           </div>
           <div class="form-group col-sm-4">
             <label for="agencia">AGÊNCIA (com digito)</label>
-            <input type="text" class="form-control is-invalid" [(ngModel)]="agencia" name="agencia" placeholder="AGÊNCIA (com digito)">
+            <input type="text" class="form-control " [(ngModel)]="agencia" name="agencia" placeholder="AGÊNCIA (com digito)" required
+              #inputAgencia="ngModel" minlength="4" maxlength="10">
+            <small *ngIf="inputAgencia.valid && inputAgencia.touched" class="form-text text-success">Ok</small>
+            <small *ngIf=" ! inputAgencia.valid  && inputAgencia.touched" class="form-text text-danger">Agência inválido</small>
+            <small *ngIf=" ! inputAgencia.valid  && inputAgencia.untouched" class="form-text text-danger">Informe sua Agência </small>
+
           </div>
           <div class="form-group col-sm-4">
             <label for="conta">CONTA CORRENTE (com dígito)</label>
-            <input type="text" class="form-control is-invalid" [(ngModel)]="conta" name="conta" placeholder="CONTA CORRENTE (com dígito)">
+            <input type="text" class="form-control " [(ngModel)]="conta" name="conta" placeholder="CONTA CORRENTE (com dígito)" required
+              #inputConta="ngModel" minlength="5" maxlength="10">
+            <small *ngIf="inputConta.valid && inputConta.touched" class="form-text text-success">Ok</small>
+            <small *ngIf=" ! inputConta.valid  && inputConta.touched" class="form-text text-danger">Conta inválido</small>
+            <small *ngIf=" ! inputConta.valid  && inputConta.untouched" class="form-text text-danger">Informe sua Conta </small>
           </div>
-
         </div>
-
       </div>
-    </form>
-    <form>
+      <h6>OBJETIVO DA VIAGEM</h6>
+    <div class="form-row" style="background: #FAFAFA; padding: 20px; border-bottom: solid 1px #F0F0F0">
+      <div class="form-group col-md-12">
+        <textarea rows="2" type="text" class="form-control" name="objetivoDaViagem" [(ngModel)]="objViagem" required #inputtext="ngModel"></textarea>
+        <small *ngIf="inputtext.valid && inputtext.touched" class="form-text text-success">Ok</small>
+            <small *ngIf=" ! inputtext.valid  && inputtext.touched" class="form-text text-danger">Descreva o motivo da viagem</small>
+             <small *ngIf=" ! inputtext.valid  && inputtext.untouched" class="form-text text-danger">Informe o motivo da viagem </small>
+          
+      </div>
+    </div>
       <h6>DESLOCAMENTOS</h6>
-
-      <div class="form-row" style="background: #FAFAFA; padding: 20px; border-bottom: solid 1px #F0F0F0">
+      <div class="form-row " style="background: #FAFAFA; padding: 20px; border-bottom: solid 1px #F0F0F0">
         <p>PARTIDA</p>
-        <div class="row">
-
+        <div class="row col-sm-12">
           <div class="form-group col-sm-3">
             <label for="startDate">Data</label>
-            <input class="form-control" [(ngModel)]="humanDate" type="date" name="startDate" required/>
+            <input class="form-control" [(ngModel)]="dataAtual" type="date" name="startDate" #va (change)="alterarData(va.value)" required/>
           </div>
           <div class="form-group col-sm-2">
             <label for="estadoPartida">UF</label>
-            <select class="form-control custom-select" [(ngModel)]="estadoPartida" required name="estadoPartida" (change)="habilitaForm()">          
+            <select class="form-control custom-select" [(ngModel)]="estadoPartida" required name="estadoPartida" #partida (click)=" pesquisaCidadePartida(partida.value)">          
               <option  *ngFor ="let estado of estado"  > {{ estado.sigla}} </option>          
             </select>
           </div>
           <div class="form-group col-sm-5">
             <label for="cidadePartida">MUNÍCIPIO</label>
-            <select class="form-control custom-select" required name="cidadePartida" [(ngModel)]="cidadePartida" (change)="habilitaForm()"> 
+            <select class="form-control custom-select" required name="cidadePartida" #minPartida="ngModel" [(ngModel)]="cidadePartida"> 
                 <option  value="" >Selecione</option>              
                 <option *ngFor ="let c of cidadesPartida">{{c.nome}}</option>             
               </select>
-
+            
           </div>
           <div class="form-group col-sm-2">
             <label for="horaPartida">HORÁRIO</label>
-            <input class="form-control custom-select" id="timePartida" type="time" [(ngModel)]="horaPartida" required name="horaPartida"
-              (change)="habilitaForm()">
+            <input class="form-control custom-select" id="timePartida" type="time" [(ngModel)]="horaPartida" required name="horaPartida">
           </div>
-
         </div>
         <hr />
         <p>DESTINO</p>
-        <div class="row">
+        <div class="row col-sm-12">
 
           <div class="form-group col-sm-2">
             <label for="estadoDestino">UF</label>
-            <select class="form-control custom-select" [(ngModel)]="estadoDestino" required name="estadoDestino" (change)="habilitaForm()">
-              
+            <select class="form-control custom-select" [(ngModel)]="estadoDestino" required name="estadoDestino" #destino (click)=" pesquisaCidadeDestino(destino.value)">              
               <option *ngFor ="let estado of estado"  >{{estado.sigla}}</option>
           
           </select>
           </div>
+        
           <div class="form-group col-sm-4">
-            <label for="cidadePartida">MUNÍCIPIO</label>
-            <select class="form-control custom-select" required name="cidadeDestino" [(ngModel)]="cidadeDestino" (change)="habilitaForm()"> 
+            <label for="cidadeDestino">MUNÍCIPIO</label>
+            <select class="form-control custom-select" required name="cidadeDestino" [(ngModel)]="cidadeDestino"> 
                 <option  value="" >Selecione</option>              
                 <option *ngFor ="let c of cidadesDestino">{{c.nome}}</option>             
               </select>
           </div>
           <div class="form-group col-sm-2">
             <label for="horaDestino">HORÁRIO</label>
-            <input id="timeDestino" class="form-control custom-select" type="time" name="time" [(ngModel)]="horaDestino" required name="horaDestino"
-              (change)="habilitaForm()">
+            <input id="timeDestino" class="form-control custom-select" type="time" name="time" [(ngModel)]="horaDestino" required name="horaDestino">
 
           </div>
-          <div class="form-group col-sm-4">
-            <label for="meioTransp">MEIO DE TRANSPORTE</label>
-            <select class="form-control custom-select" [(ngModel)]="transporte" required name="meioTransp" (change)="habilitaForm()">         
-              <option *ngFor ="let c of meioTrans" >{{c.nome}}</option>            
+         {{trnsporte}}
+          <div class="form-group col-sm-3">
+            <label for="transporte">MEIO DE TRANSPORTE</label>
+            <select class="form-control custom-select" [(ngModel)]="transporte" required name="transporte"> 
+              <option  value="" >Selecione</option>  
+            <option *ngFor ="let c of meioTrans" >{{c.nome}}</option> 
             </select>
           </div>
-
-        </div>
-
-        <div class="row">
-
-          <div class="form-group col d-flex justify-content-start">
-            <button type="submit" class="btn btn-primary btn-md" [disabled]="formDeslocamento" (click)=" adicionarDeslocamento(deslocamentoForm)">ADICIONAR DESLOCAMENTO</button>
           </div>
+        <div class="row">
+          <div>
+            <button type="submit" class="btn btn-primary btn-md" [disabled]="!form.valid">ADICIONAR DESLOCAMENTO</button>
+            <button type="button" class="btn btn-success btn-md" (click)="geraPdf()" id="cmd" [disabled]="deslocamentoTabela.length == 0 ">GERAR PDF</button>
+          </div>
+
         </div>
       </div>
     </form>
@@ -241,7 +315,7 @@
           </thead>
           <tbody>
             <tr *ngFor="let item of deslocamentoTabela">
-              <td>{{item.data | date: 'dd/MM/yyyy'}}</td>
+              <td>{{item.data }}</td>
               <td>{{item.estadoPartida}}</td>
               <td>{{item.cidadePartida}}</td>
               <td>{{item.horaPartida}}</td>
@@ -249,25 +323,22 @@
               <td>{{item.cidadeDestino}}</td>
               <td>{{item.horaDestino}}</td>
               <td>{{item.meioTransp}}</td>
-              <td><button class="btn btn-danger" (click)="onDelete(c)">Deletar</button></td>
+              <td><button type="button" (click)="removerDeslocamento(item)"><img src="/assets/images/logos/garbage.png"></button></td>
+             
             </tr>
           </tbody>
         </table>
       </div>
-      <h6>(*)No caso de uso de passagens é obrigatória a devolução dos respectivos bilhetes.</h6>
+
     </div>
-    <h6>OBJETIVO DA VIAGEM</h6>
-    <div class="form-row" style="background: #FAFAFA; padding: 20px; border-bottom: solid 1px #F0F0F0">
-      <div class="form-group col-md-8">
-        <textarea rows="3" type="text" class="form-control" name="objetivoDaViagem" #inputObjV (input)="atualizaObjViagem(inputObjV.value)"></textarea>
-      </div>
-    </div>
+
+    
+    
   </div>
 
   <hr />
 
 
-  <button type="submit" class="btn btn-primary btn-md" (click)="geraPdf()" id="cmd">PDF</button>
 
 
 

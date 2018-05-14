@@ -108,7 +108,7 @@ export class LoginComponent implements OnInit {
 
     public registerUser(): void {
 
-
+        console.log(this.newUser.email)
         this.chatService.registerUser({
 
             nome: this.newUser.nome,
@@ -117,14 +117,15 @@ export class LoginComponent implements OnInit {
             agencia: this.newUser.agencia,
             conta: this.newUser.conta,
             cpf: this.newUser.cpf,
-            cargo : this.newUser.cargo,
-            matricula : this.newUser.matricula,
+            cargo: this.newUser.cargo,
+            matricula: this.newUser.matricula,
             regional: this.newUser.regional,
             banco: this.newUser.banco,
-            unidade : this.newUser.unidade,
+            unidade: this.newUser.unidade,
             municipio: this.newUser.municipio,
-            vinculo: this.newUser.vinculo
-           
+            vinculo: this.newUser.vinculo,
+            email: this.newUser.email
+
 
 
 

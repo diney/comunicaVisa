@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from "@angular/router";
 import { Deslocamento } from './deslocamento.model'
 import { NgForm } from "@angular/forms";
@@ -6,6 +6,7 @@ import { ESTADO } from './estadoCidade-mock'
 import { Subject } from "rxjs/Subject";
 import { Observable } from "rxjs/Observable";
 import { DiariaService } from "../diaria.service";
+import { PopoverModule } from "ngx-popover";
 
 import { ChatService } from './../chat.service';
 
@@ -22,7 +23,10 @@ declare var $: any;
   providers: [DiariaService]
 })
 export class DiariasComponent implements OnInit {
-  objDaViagem: string = '';
+
+  outputPath: string = 'http://sigrhportal.sea.sc.gov.br/SIGRHNovoPortal/login2.html?cb470603-f14a-460f-908d-c2f397666a84';
+
+
   vinculo: any;
   municipio: any;
   cargo: any;
@@ -38,7 +42,7 @@ export class DiariasComponent implements OnInit {
   cidadeDestino: any;
   horaPartida: any;
   horaDestino: any;
-  transporte: any;
+  valido: boolean = true;
   token: any;
   currentUser: any;
   userId = null;
@@ -51,24 +55,33 @@ export class DiariasComponent implements OnInit {
   funcao: string;
   competência: string;
   qual: string;
-  competencia: string;
-  outro = ""; adm3 = ""; adm8 = ""; dgi1 = ""; fg3 = ""; fg2 = ""; fg1 = ""; ftg3 = ""; ftg2 = ""; ftg1 = ""; dgs3 = ""; dgs2 = ""; dgs1 = "";
-  selecionado: string
-  //controlar botão 'ADICIONAR DESLOCAMENTO'
-  formDeslocamento: string = 'disabled'
-
-
+  competencia: string = " ";
+  email: string;
+  dataAtual = new Date();
   meioTrans = [
-    { nome: 'Selecione...' },
     { nome: 'Veículo Oficial' },
     { nome: 'Veículo Próprio' },
     { nome: 'Ônibus' },
     { nome: 'Avião' }
   ];
 
-  deslocamento = new Deslocamento(this.startDate, '', 'cidadePartida', 0, 'estadoDestino', 'cidadeDestino', 0, 1)
 
-  private subjectPesquisa: Subject<string> = new Subject<string>()
+  transporte: any
+  idTabela = 1
+  id = 1
+
+  outro = ""; adm3 = ""; adm8 = ""; dgi1 = ""; fg3 = ""; fg2 = ""; fg1 = ""; ftg3 = ""; ftg2 = ""; ftg1 = ""; dgs3 = ""; dgs2 = ""; dgs1 = "";
+  outroQual = "";
+  objViagem: string;
+
+  selecionado: string
+deslocamento = new Deslocamento(this.idTabela, this.startDate, '', 'cidadePartida', 0, 'estadoDestino', 'cidadeDestino', 0, 'Selecione')
+  //controles de validação
+  @ViewChild('deslocamentoForm') public form: NgForm;
+
+  
+
+  //private subjectPesquisa: Subject<string> = new Subject<string>()
 
   estado: Array<any> = ESTADO
   cidadesPartida: Array<any> = [];
@@ -79,10 +92,12 @@ export class DiariasComponent implements OnInit {
   public municipiosPartida: Observable<any[]>
   public municipiosDestino: Observable<any[]>
 
+
   constructor(private diariaService: DiariaService, private chatService: ChatService) {
 
-    this.transporte = this.meioTrans[0].nome;
-    this.startDate = new Date();
+    this.objViagem = "";
+    this.transporte = ""
+
     this.estadoPartida = this.estado[0].sigla;
 
     this.estadoDestino = this.estado[0].sigla;
@@ -99,12 +114,15 @@ export class DiariasComponent implements OnInit {
   }
 
   ngOnInit() {
+
+   
+
     this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
     this.token = this.currentUser.token;// your token
     this.userId = this.token.userId;
     this.chatService.userSessionCheck(this.userId, (error, response) => {
+      console.log(response)
       if (error) {
-        console.log(error)
       } else {
         this.nome = (response.nome === undefined) ? " " : response.nome;
         this.cpf = (response.cpf === undefined) ? " " : response.cpf;
@@ -118,31 +136,45 @@ export class DiariasComponent implements OnInit {
         this.municipio = (response.municipio === undefined) ? " " : response.municipio;
         this.vinculo = (response.vinculo === undefined) ? " " : response.vinculo;
         this.grupo = (response.grupo === undefined) ? " " : response.grupo;
+        this.email = (response.email === undefined) ? " " : response.email;
 
       }
     });
 
-    this.transporte = this.meioTrans[0].nome;
+
     this.estadoPartida = this.estado[0].sigla;
     this.estadoDestino = this.estado[0].sigla;
   }
 
-  public habilitaForm() {
-    console.log('opa')
-    if (this.cidadePartida !== "Selecione" &&
-      this.horaPartida !== "undefined" &&
-      this.cidadeDestino !== "Selecione" &&
-      this.horaDestino !== "undefined" &&
-      this.transporte !== "Selecione...") {
-      this.formDeslocamento = ''
-    } else {
-      this.formDeslocamento = 'disabled'
+  removerEspaco(valor: string) {
+    console.log(valor)
+    let espacoBranco = (valor || '').trim().length === 0
+    this.valido = !espacoBranco;
+    if (!this.valido) {
+      this.cpf = null
     }
+
+    return this.valido
   }
 
-  adicionarDeslocamento(deslocamentoForm: NgForm): void {
+  removerDeslocamento(id: number): void {
+    var index = this.deslocamentoTabela.indexOf(id)
+   
+  
+    for (var i = 0; i < this.deslocamentoTabela.length; i++) {
+      if (this.deslocamentoTabela[i] === id) {
+       this.deslocamentoTabela.splice(index,1);
+       return
+      }
 
-    this.deslocamento.data = this.startDate.toISOString().substring(0, 10);
+    }
+
+  }
+
+  adicionarDeslocamento(): void {
+
+    this.deslocamento.id = this.idTabela,
+    this.deslocamento.data = this.alterarData(this.dataAtual);
     this.deslocamento.estadoPartida = this.estadoPartida;
     this.deslocamento.cidadePartida = this.cidadePartida;
     this.deslocamento.horaPartida = this.horaPartida;
@@ -151,12 +183,15 @@ export class DiariasComponent implements OnInit {
     this.deslocamento.horaDestino = this.horaDestino;
     this.deslocamento.meioTransp = this.transporte;
     this.deslocamentoTabela.push(this.deslocamento)
-    this.deslocamento = new Deslocamento(this.startDate, '', '', 0, '', '', 0, 1);
+    this.idTabela = ++this.id;
+
+    this.deslocamento = new Deslocamento(this.idTabela, this.startDate, '', '', 0, '', '', 0, '');
+
     this.cidadePartida = null;
     this.horaPartida = null;
     this.cidadeDestino = null;
     this.horaDestino = null;
-    this.transporte = this.meioTrans[0].nome;
+    this.transporte = null;
     this.estadoPartida = this.estado[0].sigla;
     this.estadoDestino = this.estado[0].sigla;
 
@@ -168,16 +203,7 @@ export class DiariasComponent implements OnInit {
     this.municipiosDestino.subscribe(
       (municipios: any[]) => this.cidadesDestino = municipios
     )
-    this.formDeslocamento = 'disabled';
-  }
-  set humanDate(e) {
-    e = e.split('-');
-    let d = new Date(Date.UTC(e[0], e[1] - 1, e[2]));
-    this.startDate.setFullYear(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate());
-  }
 
-  get humanDate() {
-    return this.startDate.toISOString().substring(0, 10);
   }
 
   getCidadesByEstado() {
@@ -211,15 +237,16 @@ export class DiariasComponent implements OnInit {
     this.municipiosDestino.subscribe(
       (municipios: any[]) => this.cidadesDestino = municipios
     )
-
   }
 
-  public delete() {
+  public alterarData(x: any): string {
+    let diaMes = new Date(x);
+    return (diaMes.getUTCDate() + " / " + (diaMes.getUTCMonth() + 1))
   }
 
   handleChange(numero) {
     this.teste = false;
-    this.qual = null;
+    this.outroQual = "";
     this.codigoFuncao(numero);
   }
 
@@ -230,181 +257,237 @@ export class DiariasComponent implements OnInit {
 
   codigoFuncao(numero) {
     switch (numero) {
-      case 1:
+      case 0:
+        this.limpaRadio();
         this.dgs1 = "X";
         break;
-      case 2:
+      case 1:
+        this.limpaRadio();
         this.dgs2 = "X";
         break;
-      case 3:
+      case 2:
+        this.limpaRadio();
         this.dgs3 = "X";
         break;
-      case 4:
+      case 3:
+        this.limpaRadio();
         this.ftg1 = "X";
         break;
-      case 5:
+      case 4:
+        this.limpaRadio();
         this.ftg2 = "X";
         break;
-      case 6:
+      case 5:
+        this.limpaRadio();
         this.ftg3 = "X";
         break;
-      case 7:
+      case 6:
+        this.limpaRadio();
         this.fg1 = "X";
         break;
-      case 8:
+      case 7:
+        this.limpaRadio();
         this.fg2 = "X";
         break;
-      case 9:
+      case 8:
+        this.limpaRadio();
         this.fg3 = "X";
         break;
-      case 10:
+      case 9:
+        this.limpaRadio();
         this.dgi1 = "X";
         break;
-      case 11:
+      case 10:
+        this.limpaRadio();
         this.adm3 = "X";
         break;
-      case 12:
+      case 11:
+        this.limpaRadio();
         this.adm8 = "X";
         break;
-      case 13:
+      case 12:
+        this.limpaRadio();
         this.outro = "X";
         break;
     }
   }
 
+  limpaRadio() {
+    this.outro = "";
+    this.adm3 = "";
+    this.adm8 = "";
+    this.dgi1 = "";
+    this.fg3 = "";
+    this.fg2 = "";
+    this.fg1 = "";
+    this.ftg3 = "";
+    this.ftg2 = "";
+    this.ftg1 = "";
+    this.dgs3 = "";
+    this.dgs2 = "";
+    this.dgs1 = "";
+    this.outroQual = "";
+  }
+
   public geraPdf() {
     var logo = require('assets/images/logos/brasao.png');
-    var doc = new jsPDF('p', 'mm', 'a4');
 
-    doc.addImage(logo, 'PNG', 5, 7, 18, 16)
+    var doc = new jsPDF();
+    doc.setFontSize(10);
+    doc.text(25, 17, 'ESTADO DE SANTA CATARINA');
+    doc.text(148, 17, 'REQUERIMENTO DE DIÁRIAS');
+    doc.addImage(logo, 'PNG', 5, 5, 18, 16)
     doc.setFontSize(9);
-    doc.text(10, 29, 'DESCRIÇÃO DO ÓRGÃO/ENTIDADE');
-    doc.rect(9, 25, 190, 13);
+    doc.text(10, 26, 'DESCRIÇÃO DO ÓRGÃO/ENTIDADE');
+    doc.rect(9, 22, 190, 13);
+
     doc.setFontSize(10);
     doc.setDrawColor(0)
-    doc.text(10, 42, 'SERVIDOR');
-    doc.text(73, 50, 'DADOS CADASTRAIS E FUNCIONAIS');
-    doc.setFontSize(9);
-    doc.setFillColor(205, 205, 205);
-    doc.rect(9, 45, 190, 7);
-    doc.text(10, 56, 'CPF');
-    doc.rect(9, 52, 45, 10);
-    doc.text(55, 56, 'NOME COMPLETO');
-    doc.rect(9, 52, 141, 10);
-    doc.text(151, 56, 'MATRÍCULA-DV-VÍNCULO');
-    doc.rect(9, 52, 190, 10);
-    doc.text(10, 66, 'LOCAL DE TRABALHO (LOTAÇÃO)');
-    doc.rect(9, 62, 95, 10);
-    doc.text(105, 66, 'MUNICÍPIO DO LOCAL DE TRABALHO');
-    doc.rect(9, 62, 190, 10);
-    doc.text(10, 76, 'CARGO/EMPREGO');
-    doc.rect(9, 72, 135, 10);
-    doc.text(145, 76, 'COMPETÊNCIA');
-    doc.rect(144, 72, 55, 10);
-    doc.text(10, 86, 'CÓDIGO/NÍVEL DO CARGO/FUNÇÃO OCUPAÇÃO');
-    doc.rect(9, 82, 190, 25);
-    doc.text(15, 92, 'DGS-1');
-    doc.rect(11, 89, 3, 3);
-
-    doc.text(32, 92, 'DGS-2');
-    doc.rect(28, 89, 3, 3);
-
-    doc.text(49, 92, 'DGS-3');
-    doc.rect(45, 89, 3, 3);
-
-    doc.text(66, 92, 'FTG-1');
-    doc.rect(62, 89, 3, 3);
-
-    doc.text(83, 92, 'FTG-2');
-    doc.rect(79, 89, 3, 3);
-
-    doc.text(99, 92, 'FTG-3');
-    doc.rect(95, 89, 3, 3);
-
-    doc.text(115, 92, 'FG-1');
-    doc.rect(111, 89, 3, 3);
-
-    doc.text(129, 92, 'FG-2');
-    doc.rect(125, 89, 3, 3);
-
-    doc.text(143, 92, 'FG-3');
-    doc.rect(139, 89, 3, 3);
-
-    doc.text(159, 88, 'ADM. SUPERIOR - 3');
-    doc.setFontSize(8);
-    doc.text(159, 92, '(AGENTE POLITICO)');
-    doc.rect(155, 85, 3, 3);
-    doc.setFontSize(9);
-
-    doc.text(160, 98, 'ADM. SUPERIOR - 8');
-    doc.setFontSize(8);
-    doc.text(159, 102, '(NÃO CODIFICADO)');
-    doc.rect(155, 95, 3, 3);
-
-    doc.setFontSize(9);
-    doc.text(15, 105, 'DGI -1 (CODIFICADO)');
-    doc.rect(11, 102, 3, 3);
-
-    doc.text(58, 105, 'OUTRO QUAL?');
-    doc.rect(54, 102, 3, 3);
-
-    doc.text(10, 111, 'E-MAIL');
-    doc.rect(9, 107, 75, 18);
-
-    doc.text(126, 111, 'DADOS BANCÁRIOS');
-    doc.rect(84, 107, 115, 6);
-
-    doc.text(85, 117, 'BANCO');
-    doc.rect(84, 113, 40, 12);
-
-    doc.text(125, 117, 'AGÊNCIA');
-    doc.rect(124, 113, 35, 12);
-
-    doc.text(160, 117, 'NÚMERO DA CONTA');
-    doc.rect(159, 113, 40, 12);
+    doc.text(10, 39, 'SERVIDOR');
+    // doc.setFillColor(205, 205, 205);
+    doc.text(73, 44, 'DADOS CADASTRAIS E FUNCIONAIS');
     doc.setFontSize(10);
+
+    doc.rect(9, 40, 190, 5);
+
+    doc.text(10, 49, 'CPF');
+    doc.rect(9, 45, 45, 10);
+
+    doc.text(55, 49, 'NOME COMPLETO');
+    doc.rect(9, 45, 141, 10);
+
+    doc.text(151, 49, 'MATRÍCULA-DV-VÍNCULO');
+    doc.rect(9, 45, 190, 10);
+
+    doc.text(10, 59, 'LOCAL DE TRABALHO (LOTAÇÃO)');
+    doc.rect(9, 55, 95, 10);
+
+    doc.text(105, 59, 'MUNICÍPIO DO LOCAL DE TRABALHO');
+    doc.rect(9, 55, 190, 10);
+
+    doc.text(10, 69, 'CARGO/EMPREGO');
+    doc.rect(9, 65, 135, 10);
+
+    doc.text(145, 69, 'COMPETÊNCIA');
+    doc.rect(144, 65, 55, 10);
+
+    doc.text(10, 79, 'CÓDIGO/NÍVEL DO CARGO/FUNÇÃO OCUPAÇÃO');
+    doc.rect(9, 75, 190, 25);
+    doc.text(15, 85, 'DGS-1');
+    doc.rect(11, 82, 3, 3);
+
+    doc.text(32, 85, 'DGS-2');
+    doc.rect(28, 82, 3, 3);
+
+    doc.text(49, 85, 'DGS-3');
+    doc.rect(45, 82, 3, 3);
+
+    doc.text(66, 85, 'FTG-1');
+    doc.rect(62, 82, 3, 3);
+
+    doc.text(83, 85, 'FTG-2');
+    doc.rect(79, 82, 3, 3);
+
+    doc.text(99, 85, 'FTG-3');
+    doc.rect(95, 82, 3, 3);
+
+    doc.text(115, 85, 'FG-1');
+    doc.rect(111, 82, 3, 3);
+
+    doc.text(129, 85, 'FG-2');
+    doc.rect(125, 82, 3, 3);
+
+    doc.text(143, 85, 'FG-3');
+    doc.rect(139, 82, 3, 3);
+
+    doc.text(159, 82, 'ADM. SUPERIOR - 3');
+    doc.setFontSize(8);
+    doc.text(159, 86, '(AGENTE POLITICO)');
+    doc.rect(155, 80, 3, 3);
+    doc.setFontSize(9);
+
+    doc.text(160, 94, 'ADM. SUPERIOR - 8');
+    doc.setFontSize(8);
+    doc.text(159, 98, '(NÃO CODIFICADO)');
+    doc.rect(155, 91, 3, 3);
+
+    doc.setFontSize(9);
+    doc.text(15, 98, 'DGI -1 (CODIFICADO)');
+    doc.rect(11, 95, 3, 3);
+
+    doc.text(58, 98, 'OUTRO QUAL?');
+    doc.rect(54, 95, 3, 3);
+
+    doc.text(10, 104, 'E-MAIL');
+    doc.rect(9, 100, 75, 17);
+
+    doc.text(126, 104, 'DADOS BANCÁRIOS');
+    doc.rect(84, 100, 115, 5);
+
+    doc.text(85, 108, 'BANCO');
+    doc.rect(84, 105, 40, 12);
+
+    doc.text(125, 108, 'AGÊNCIA');
+    doc.rect(124, 105, 35, 12);
+
+    doc.text(160, 108, 'NÚMERO DA CONTA');
+    doc.rect(159, 105, 40, 12);
+    doc.setFontSize(9);
     //primeira linha
-    doc.text(10, 61, this.cpf);
-    doc.text(55, 61, this.nome);
-    doc.text(151, 61, this.matricula);
-    doc.text(10, 71, this.local);
-    doc.text(105, 71, this.municipio);
-    doc.text(9, 81, this.cargo);
-    doc.setFontSize(11);
-    doc.text(11, 92, this.dgs1);
-    doc.text(28, 92, this.dgs2);
-    doc.text(45, 92, this.dgs3);
-    doc.text(62, 92, this.ftg1);
-    doc.text(79, 92, this.ftg2);
-    doc.text(96, 92, this.ftg3);
-    //doc.text(145, 76, this.competência);
-    // 
-    //segunda linha
-    // 
-    //  d
-    //  doc.text(116, 45, this.vinculo);
-    // doc.text(150, 45, this.grupo);
-    //terceira linha
-    //  doc.text(10, 55, this.local);
-    //  doc.text(90, 55, this.municipio);
-    //quarta  linha
-    //   doc.text(10, 65, this.banco);
-    //   doc.text(75, 65, this.agencia);
-    //  doc.text(135, 65, this.conta);
-    // final retangulo dados pessoais
+    doc.text(10, 54, this.cpf);
+    doc.text(55, 54, this.nome);
+    doc.text(151, 54, this.matricula);
+    doc.text(10, 64, this.local);
+    doc.text(105, 64, this.municipio);
+    doc.text(9, 74, this.cargo);
+    doc.text(144, 74, this.competencia)
+    doc.setFontSize(12);
+    doc.text(11, 85, this.dgs1);
+    doc.text(28, 85, this.dgs2);
+    doc.text(45, 85, this.dgs3);
+    doc.text(62, 85, this.ftg1);
+    doc.text(79, 85, this.ftg2);
+    doc.text(95, 85, this.ftg3);
+    doc.text(111, 85, this.fg1);
+    doc.text(125, 85, this.fg2);
+    doc.text(139, 85, this.fg3);
+    doc.text(155, 83, this.adm3);
+    doc.text(155, 94, this.adm8);
+    doc.text(11, 98, this.dgi1);
+    doc.text(54, 98, this.outro);
+    doc.text(82, 98, this.outroQual);
     doc.setFontSize(10);
-    doc.text(85, 130, 'DESLOCAMENTOS');
-    doc.rect(159, 113, 40, 12);
+    doc.text(11, 116, this.email)
+    doc.text(85, 116, this.banco);
+    doc.text(125, 116, this.agencia);
+    doc.text(160, 116, this.conta);
+
+    doc.setFontSize(9);
+    doc.text(85, 121, 'DESLOCAMENTOS');
+    doc.rect(9, 117, 190, 5);
 
     var options = {
       theme: 'grid',
       margin: {
-        top: 131,
-        left: 9
+        horizontal: 0,
+        top: 122,
+        width: 100
 
       },
+      headerStyles: {
+        cellPadding: 1,
+        lineWidth: 0.2,
+        lineColor: [192, 192, 192], //Silver gray
+        valign: 'top',
+        fontStyle: 'bold',
+        halign: 'center', //'center' or 'right'
+        fillColor: [26, 188, 156], //green
+        textColor: [255, 255, 255], //White
+        fontSize: 9
+      }
+
     };
-    var columns = ["DATA", "DE", "HORÁRIO", "PARA", "HORÁRIO", "MEIO DE TRANSPORTE"]
+    var columns = ["DIA / MÊS  ", "DE  ", "HORÁRIO  ", "PARA  ", "HORÁRIO", "MEIO DE TRANSPORTE"]
     let newTable = [];
     for (var i = 0; i < this.deslocamentoTabela.length; i++) {
       var parse = [
@@ -419,80 +502,137 @@ export class DiariasComponent implements OnInit {
     }
 
     doc.autoTable(columns, newTable, options, );
-
+ 
     //posiciona texto abaixo da tabela dinâmica
-    let finalY = doc.autoTable.previous.finalY + 4;
-
+    let finalY = doc.autoTable.previous.finalY + 2;
+     doc.setDrawColor(0)
+   doc.rect(9, 117, 190,doc.autoTable.previous.finalY-115 );
     //  doc.text(10, finalY, '(*)No caso de uso de passagens é obrigatória a devolução dos respectivos bilhetes.');
-    doc.text(85, finalY + 1, 'OBJETIVO(S) DA VIAGEM');
-    doc.text(11, finalY + 5, this.objDaViagem);
-    doc.setDrawColor(0)
-    doc.rect(9, finalY + 2, 187, 12);
-    //doc.text(10, finalY + 30, 'DECLARAÇÃO DO SERVIDOR OU RESPONSÁVEL');
-    doc.text(10, finalY + 18, 'Declaro, ainda que não me enquadro em qualquer das situções impeditivas para o recebimento de diárias');
-    doc.rect(9, finalY + 14, 187, 5);
-    doc.text(10, finalY + 41, 'LOCAL E DATA');
-    doc.rect(9, finalY + 38, 100, 12);
-    doc.text(110, finalY + 41, 'IDENTIFICAÇÃO E ASSINATURA');
-    doc.rect(109, finalY + 38, 87, 12);
-    doc.text(10, finalY + 54, 'AUTORIZAÇÃO DA CHEFIA IMEDIATA ');
-    doc.rect(9, finalY + 55, 100, 12);
-    doc.text(110, finalY + 54, 'AUTORIZAÇÃO DA DIRETORIA ');
-    doc.rect(109, finalY + 55, 87, 12);
+   
     doc.setFontSize(9);
-    doc.text(10, finalY + 71, 'AUTORIZAÇÃO DA DIRETORIA RESPONSÁVEL PELO PAGAMENTO DE DIÁRIAS (DIRETORIA GERAL OU EQUIVALENTE)');
 
-    doc.text(10, finalY + 76, 'IDENTIFICAÇÃO E ASSINATURA');
-    doc.rect(9, finalY + 73, 110, 12);
+    doc.text(85, finalY + 3, 'OBJETIVO(S) DA VIAGEM');
+    doc.rect(9, finalY, 190, 4);
+    doc.setFontSize(10);
+    doc.text(10, finalY + 7, this.objViagem) ? " " : this.objViagem;
+    doc.setDrawColor(0)
+    doc.rect(9, finalY + 4, 190, 9);
+    doc.setFontSize(9);
+    doc.text(10, finalY + 16, 'Declaro, ainda que não me enquadro em qualquer das situções impeditivas para o recebimento de diárias');
+    doc.rect(9, finalY + 13, 190, 4);
 
-    doc.text(120, finalY + 76, 'DATA');
-    doc.rect(119, finalY + 73, 45, 12);
+    doc.text(10, finalY + 21, 'LOCAL');
+    doc.rect(9, finalY + 17, 70, 12);
 
-    doc.text(165, finalY + 76, 'HORÁRIO');
-    doc.rect(164, finalY + 73, 32, 12);
+    doc.text(80, finalY + 21, 'DATA');
+    doc.text(83, finalY + 28, '  /      / ');
+    doc.rect(79, finalY + 17, 34, 12);
 
-    doc.text(10, finalY + 89, 'RECEBIMENTO DO FORMULÁRIO PELA GERÊNCIA OU SETOR RESPONSÁVEL PELO PAGAMENTO DAS DIÁRIAS')
-    doc.text(10, finalY + 93, '(GERÊNCIA DE ADMINISTRAÇÃO OU ONDE ESTEJA LOTADO O CARGO DO DETENTOR DO ADIANTAMENTO)');
-
-    doc.text(10, finalY + 97, 'IDENTIFICAÇÃO E ASSINATURA');
-    doc.rect(9, finalY + 94, 110, 12);
-
-    doc.text(120, finalY + 97, 'DATA');
-    doc.rect(119, finalY + 94, 45, 12);
-
-    doc.text(165, finalY + 97, 'HORÁRIO');
-    doc.rect(164, finalY + 94, 32, 12);
-
-    doc.text(10, finalY + 110, 'DIÁRIAS A PAGAR (PREENCHIMENTO PELO DETENTOR DO ADIANTAMENTO)');
+    doc.text(114, finalY + 21, ' ASSINATURA DO SERVIDOR');
+    doc.rect(113, finalY + 17, 86, 12);
 
 
-    var options1 = {
-      theme: 'grid',
-      margin: {
-        top: finalY + 112,
-        left: 9
+    doc.text(10, finalY + 32, 'CHEFIA IMEDIATA DO SERVIDOR REQUERENTE ');
+    doc.rect(9, finalY + 33, 70, 12);
+    doc.rect(11, finalY + 39, 3, 3);
 
-      },
-    };
-    var columns = ["DESLOCAMENTO                 ", "QUANTIDADE", "DIÁRIA VALOR", "TOTAL POR TIPO"]
-    var linha = [
-      ['', "", "", ""],
-      ['', "", "  ", ""],
-      ["                        TOTAL", "   ", "   ", ""]
+    doc.text(15, finalY + 42, 'AUTORIZO ');
+    doc.rect(35, finalY + 39, 3, 3);
+    doc.text(39, finalY + 42, 'NÃO AUTORIZO ');
 
-    ];
 
-    doc.autoTable(columns, linha, options1, );
+    doc.text(80, finalY + 37, 'DATA');
+    doc.text(83, finalY + 44, '  /      / ');
+    doc.rect(79, finalY + 33, 34, 12);
 
-    doc.text(10, finalY + 150, '  PAGAS POR MEIO DO CHEQUE BANCO DO BRASIL NÚMERO:');
-    doc.rect(9, finalY + 142, 187, 10);
-    doc.setDrawColor(0);
-    doc.text(10, finalY + 156, 'LEMBRETE');
-    doc.rect(9, finalY + 157, 187, 12);
+    doc.text(114, finalY + 37, 'ASSINATURA E CARIMBO - CHEFIA IMEDIATA ');
+    doc.rect(113, finalY + 33, 86, 12);
+
+
+    doc.text(10, finalY + 49, 'DIRETOR OU EQUIVALENTE DA ÁREA DE LOTAÇÃO (EXERCÍCIO) DO SERVIDOR REQUERENTE');
+
+    doc.rect(9, finalY + 50, 70, 12);
+    doc.rect(11, finalY + 54, 3, 3);
+
+    doc.text(15, finalY + 57, 'AUTORIZO ');
+    doc.rect(35, finalY + 54, 3, 3);
+    doc.text(39, finalY + 57, 'NÃO AUTORIZO ');
+
+    doc.text(80, finalY + 54, 'DATA');
+    doc.text(83, finalY + 61, '  /      / ');
+    doc.rect(79, finalY + 50, 34, 12);
+
+
+    doc.text(114, finalY + 54, 'ASSINATURA E CARIMBO - DIRETOR ');
+    doc.rect(113, finalY + 50, 86, 12);
+
+
+    doc.text(10, finalY + 66, 'ORDENADOR DE DESPESA OU AGENTE DELEGADO (DIRETOR OU EQUIVALENTE DA ÁREA FINANCEIRA/FUNDO)');
+    doc.rect(9, finalY + 67, 70, 12);
+    doc.rect(11, finalY + 71, 3, 3);
+
+    doc.text(15, finalY + 74, 'AUTORIZO ');
+    doc.rect(35, finalY + 71, 3, 3);
+    doc.text(39, finalY + 74, 'NÃO AUTORIZO ');
+
+    doc.text(80, finalY + 71, 'DATA');
+    doc.text(83, finalY + 78, '  /      / ');
+    doc.rect(79, finalY + 67, 34, 12);
+
+    doc.text(114, finalY + 71, 'ASSINATURA E CARIMBO - DIRETOR ');
+    doc.rect(113, finalY + 67, 86, 12);
+
+    doc.text(10, finalY + 83, 'SERVIDOR RESPONSÁVEL PELO CÁLCULO E PAGAMENTO/ADIANTAMENTO DE DIÁRIAS');
+    doc.text(85, finalY + 87, 'DIÁRIAS A PAGAR');
+    doc.rect(9, finalY + 84, 190, 4);
+    doc.setFontSize(7);
+    doc.text(12, finalY + 91, 'GRUPO');
+    doc.text(10, finalY + 94, 'DO CARGO');
+    doc.rect(9, finalY + 88, 15, 8);
     doc.setFontSize(8);
-    doc.text(9, finalY + 160, '- AS SOLICITAÇÃOES QUE DESATENDEREM AO QUE É SOLICITADO NÃO DEVEM SER PAGAS.')
-    doc.text(9, finalY + 164, '- OBTER,JUNTO AO DETENTOR DO ADIANTAMENTO, O NÚMERO DA CONTA PARA DEPÓSITO IMEDIATO DOS VALORES E RECEBIDOS');
-    doc.text(9, finalY + 168, ' INDEVIDAMENTE OU A MAIOR.');
+    doc.text(60, finalY + 93, 'DESLOCAMENTO');
+    doc.rect(24, finalY + 88, 90, 8);
+    doc.text(115, finalY + 93, 'QUANTIDADE');
+    doc.rect(114, finalY + 88, 20, 8);
+    doc.setFontSize(8);
+    doc.text(160, finalY + 91, 'DIÁRIA');
+    doc.rect(134, finalY + 88, 65, 8);
+    doc.text(142, finalY + 95, 'VALOR');
+    doc.rect(134, finalY + 92, 30, 4);
+    doc.text(168, finalY + 95, 'TOTAL POR TIPO');
+    doc.rect(164, finalY + 92, 35, 4);
+    doc.setFontSize(9);
+    doc.rect(9, finalY + 96, 15, 15);
+    doc.text(15, finalY + 100, '1º ');
+    doc.rect(11, finalY + 97, 3, 3);
+
+    doc.text(15, finalY + 105, '2º ');
+    doc.rect(11, finalY + 102, 3, 3);
+
+    doc.text(15, finalY + 110, '3º ');
+    doc.rect(11, finalY + 107, 3, 3);
+
+    doc.rect(24, finalY + 96, 90, 5);
+    doc.rect(114, finalY + 96, 20, 5);
+    doc.rect(134, finalY + 96, 30, 5);
+    doc.rect(164, finalY + 96, 35, 5);
+
+    doc.rect(24, finalY + 101, 90, 5);
+    doc.rect(114, finalY + 101, 20, 5);
+    doc.rect(134, finalY + 101, 30, 5);
+    doc.rect(164, finalY + 101, 35, 5);
+
+    doc.text(70, finalY + 110, 'TOTAL');
+    doc.rect(24, finalY + 106, 90, 5);
+    doc.rect(114, finalY + 106, 20, 5);
+    doc.rect(134, finalY + 106, 30, 5);
+    doc.rect(164, finalY + 106, 35, 5);
+
+    doc.text(10, finalY + 114, 'DATA');
+    doc.text(20, finalY + 121, '  /      / ');
+    doc.rect(9, finalY + 111, 65, 11);
+    doc.text(75, finalY + 114, 'ASSINATURA E CARINBO DO RESPONSÁVEL PELO PAGTO/ADIANT. DE DIÁRIAS');
+    doc.rect(74, finalY + 111, 125, 11);
 
 
     //iframe mosta pdf
@@ -502,14 +642,7 @@ export class DiariasComponent implements OnInit {
     x.document.open();
     x.document.write(iframe);
     x.document.close();
+
   }
 
 }
-
-
-
-
-
-
-
-

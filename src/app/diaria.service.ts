@@ -19,16 +19,15 @@ export class DiariaService {
  
 
         public pesquisaMunicipios(termo: string): Observable<any[]> {
-            console.log(termo)
-        //if(termo == undefined){
-              //return this.http.get(`${this.url_api}/${42}/municipios `)
-              // .retry(10)
-            //.map((resposta: Response) => resposta.json())
-       // }
+         
         return this.http.get(`${this.url_api}/${termo}/municipios `)
             .retry(10)
             .map((resposta: Response) => resposta.json())
         }
+
+        
+
+        
     
     }
     

@@ -2,7 +2,8 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
-import { ReactiveFormsModule } from '@angular/forms'
+//import { ReactiveFormsModule } from '@angular/forms'
+import { PopoverModule } from "ngx-popover";
 
 
 import { AppComponent } from './app.component';
@@ -22,10 +23,6 @@ import { Progresso } from "app/progresso.service";
 import { DiariasComponent } from './diarias/diarias.component';
 
 
-
-
-
-
 @NgModule({
   declarations: [
     AppComponent,
@@ -36,7 +33,8 @@ import { DiariasComponent } from './diarias/diarias.component';
     ForumPrincipalComponent,
     PainelComponent,
     IncluirPublicacaoComponent,
-    DiariasComponent,
+    DiariasComponent
+  
 
 
   ],
@@ -45,7 +43,8 @@ import { DiariasComponent } from './diarias/diarias.component';
     FormsModule,
     HttpModule,
     routing,
-    ReactiveFormsModule,
+   // ReactiveFormsModule,
+    PopoverModule,
   ],
   providers: [LoginService, ChatService, HttpService, AuthGuard, Progresso],
   bootstrap: [AppComponent]
