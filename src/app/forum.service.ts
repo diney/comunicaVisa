@@ -9,6 +9,7 @@ export class ForumService {
 	constructor(private httpService: HttpService) { }
 
 	public insertPost(params, callback): any {
+
 		this.httpService.insertPost(params).subscribe(
 			response => {
 				callback(false, response);
@@ -19,7 +20,20 @@ export class ForumService {
 		);
 	}
 
-		public getPosts( callback): any {
+	public insertPostYoutube(params, callback): any {
+		
+		this.httpService.insertPostYoutube(params).subscribe(
+			response => {
+				callback(false, response);
+			},
+			error => {
+				callback(true, 'HTTP fail.');
+			}
+		);
+	}
+
+
+	public getPosts(callback): any {
 		this.httpService.getPosts().subscribe(
 			response => {
 				callback(false, response);
@@ -30,7 +44,7 @@ export class ForumService {
 		);
 	}
 
-	public insertComentario( params,callback): any {
+	public insertComentario(params, callback): any {
 		this.httpService.insertComentario(params).subscribe(
 			response => {
 				callback(false, response);
@@ -40,7 +54,18 @@ export class ForumService {
 			}
 		);
 	}
+	public excluirPost(params, callback): any {
+		this.httpService.excluirPost(params).subscribe(
+			response => {
+				callback(false, response);
+			},
+			error => {
+				callback(true, 'HTTP fail.');
+			}
+		);
+	}
 
-	
+
+
 
 }

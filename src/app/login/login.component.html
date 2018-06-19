@@ -1,34 +1,21 @@
 <body>
 <div class="container">
-	
 
-
-	
-
-	<div class=" login-screen">
-	
-
-		
+	<div class="login-screen">
 
 			<div class="justifier">
 				<p class="centro" >
 					COMUNICA VISA
 				</p>
-
 				<form #f="ngForm" (ngSubmit)="login(f)">
 					<div class="form-group">
-
-						<input type="text" name="username" class="form-control"  placeholder="LOGIN PHAROS" [(ngModel)]="user.username" required
-							(keyup)="onkeyup($event)"  autofocus>
-
+						<input type="text" name="username" class="form-control"  placeholder="LOGIN PHAROS"  
+							(keyup)="onkeyup($event)"  [(ngModel)]="user.login" required  autofocus>
 					</div>
-
 					<div class="form-group">
-
 						<input type="password" name="password" class="form-control" placeholder="SENHA PHAROS" [(ngModel)]="user.password" required
-						 (keyup)="onkeyup($event)" >
+						 (keyup)="onkeyup($event)">
 					</div>
-
 					<div class="submit-row">
 						<input type="submit" class="btn btn-success btn-lg btn-block" value="Acessar">
 					</div>
@@ -40,11 +27,6 @@
                 </div>
 				</form>
 			</div>
-
-			
-		
-	
-	 
 
 </div>
 </div>

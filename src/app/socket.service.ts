@@ -20,16 +20,17 @@ export class SocketService {
 	constructor() { }
 
 	/* 
-* Method to connect the users to socket
+* Método para conectar os usuários ao soquete
 */
 	connectSocket(userId: string) {
 		this.socket = io(this.BASE_URL, { query: `userId=${userId}` });
 	}
 
 	/* 
-  * Method to emit the add-messages event.
+  * Método para emitir o evento add-messages.
   */
 	sendMessage(message: any): void {
+		
 		this.socket.emit('add-message', message);
 
 	}
@@ -62,9 +63,7 @@ export class SocketService {
 	*/
 	receiveMessages(): any {
 		let observable = new Observable(observer => {
-			this.socket.on('add-message-response', (data) => {
-
-				//alert(data.fromUserId +' fromUsrId' + data.toUserId+ " toUserId ")
+			this.socket.on('add-message-response', (data) => {				
 
 				observer.next(data);
 			});
@@ -85,8 +84,10 @@ export class SocketService {
 
 		let observable = new Observable(observer => {
 			this.socket.on('chat-list-response', (data) => {
-									
+	
 				observer.next(data);
+             		 
+
 			});
 
 			return () => {
@@ -95,5 +96,22 @@ export class SocketService {
 		})
 		return observable;
 	}
+
+/* 
+	 *   Método para enviar o evento user digitando	* 
+	*/
+	userDigitandoMessage(digitando: any): void {
+		
+	this.socket.emit('digitando-messages', digitando);
+	}
+
+
+
+
+	
+
+
+
+	
 
 }

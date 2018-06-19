@@ -1,4 +1,4 @@
-<div class="container" id="customers">
+<div class="container" >
 
 
   <div class="ordem-compra">
@@ -181,9 +181,12 @@
               <label class="radio-inline">
                 <input type="radio" name="radio" id="qual" #12 (change)="qualChange(12)" value="12" > OUTRO QUAL?
              </label>
+              <label class="radio-inline">
+                <input type="radio" name="radio"  value="" checked > EFETIVO
+             </label>
               <div class="form-group col-sm-10">
                 <div *ngIf=teste>
-                  <input type="text" class="form-control " [(ngModel)]=" outroQual" placeholder="Especifique aqui" name=" outroQual">
+                  <input type="text" class="form-control " [(ngModel)]=" outroQual" placeholder="Especifique aqui" name=" outroQual" required>
                 </div>
               </div>
             </div>
@@ -323,7 +326,7 @@
               <td>{{item.cidadeDestino}}</td>
               <td>{{item.horaDestino}}</td>
               <td>{{item.meioTransp}}</td>
-              <td><button type="button" (click)="removerDeslocamento(item)"><img src="/assets/images/logos/garbage.png"></button></td>
+              <td><button type="button" (click)="removerDeslocamento(item)"><a class="maosinha"><img src="/assets/images/logos/garbage.png"></a></button></td>
              
             </tr>
           </tbody>

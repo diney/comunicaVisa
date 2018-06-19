@@ -31,7 +31,7 @@ export class ChatService {
 	* Login the user
 	*/
 	public login(params, callback): any {
-	console.log(params)
+
 		this.httpService.login(params).subscribe(
 			response => {
 				callback(false, response);
@@ -51,7 +51,7 @@ export class ChatService {
 				//callback(false, response);
 			},
 			error => {
-				console.log(error)
+				
 				callback(true, 'HTTP fail.');
 				this.usuarioAutenticado = false;
 				this.mostrarMenuEmitter.emit(false);
@@ -91,11 +91,13 @@ export class ChatService {
 		this.httpService.getMessages(params).subscribe(
 			response => {
 				callback(false, response);
+					
 			},
 			error => {
 				callback(true, 'HTTP fail.');
 			}
 		);
+	
 	}
 
 	/* 
@@ -106,6 +108,7 @@ export class ChatService {
 		this.httpService.updateMessages(params).subscribe(
 			response => {
 				callback(false, response);
+					
 			},
 			error => {
 				callback(true, 'HTTP fail.');
@@ -127,6 +130,21 @@ export class ChatService {
 			}
 		);
 	}
+
+	/* 
+	* Method to check the session of user.
+	*/
+	public fotoChat(params, callback): any {
+		this.httpService.fotoChat(params).subscribe(
+			response => {
+				callback(false, response);
+			},
+			error => {
+				callback(true, 'HTTP fail.');
+			}
+		);
+	}
+
 
 
 

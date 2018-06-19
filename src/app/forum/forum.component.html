@@ -1,5 +1,6 @@
-<div class="container ">
-  <!-- Loading overlay section starts -->
+<div class="container-fluid">
+ 
+     <!-- Loading overlay section starts -->
   <div [class.overlay-display]="overlayDisplay" class="overlay">
   <div class="spinner">
 			<div class="rect1"></div>
@@ -9,8 +10,25 @@
 			<div class="rect5"></div>
 		</div>
   </div>
+  	<div class="col-md-12">
+		<div class="header">
+			<div class="welcome-user">
+				<span>NOTÍCIAS</span>
+
+				<div class="home-navigation">
+					<div class="d-flex justify-content-end">
+					 <button class="btn btn-outline-success my-2 my-sm-0" routerLink="/publicar">Post</button>
+					</div>
+				</div>
+			</div>
+
+			<hr style="height:4px; border:none; background-color:#DB362C; margin-top: 0px; margin-bottom: 0px;" />
+			<hr style="height:4px; border:none; background-color:darkgreen; margin-top: 0px; margin-bottom: 0px;" />
+		</div>
+	</div>
+  <div class="container">
   <!-- Loading overlay section starts -->
-  <ul class="timeline">
+   <ul class="timeline">
     <li *ngFor="let post of  posts">
       <div class="timeline-badge info"><i class="glyphicon glyphicon-credit-card"></i></div>
       <div class="timeline-panel">
@@ -35,5 +53,52 @@
     </li>
 
   </ul>
+
+  	<!-- Modal -->
+
+	<div class="modal fade" id="exampleModal" role="dialog">
+
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h5 class="modal-title" id="exampleModalLabel">Criar publicação </h5>
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						   <span aria-hidden="true">&times;</span>
+                  </button>
+				</div>
+				<div class="modal-body">
+				<div class="panel-body">
+          <form  >
+			<div class="form-group">
+				
+				<input type="file" name="arquivo" id="arquivo" class=" form-control "  (change)="verificaExt($event)" placeholder="Upload file..." 
+				[(ngModel)]="arquivo" required #file="ngModel"/>
+				<div class="alert alert-danger" role="alert" [hidden]="tipoArqui">O arquivo selecionado não e válido</div>
+				  
+			</div>
+			<div [hidden]="hideElement">
+		 <img class="rounded mx-auto d-block img-200-200" src="preview" [hidden]="hideElement" >
+			</div>
+			<div class="form-group">
+				<br/>
+				<input type="text" name="titulo" id="titulo" class="form-control" placeholder="Titulo" autocomplete="off" [(ngModel)]="titulo" required>
+			</div>
+			<button type="submit" [disabled]="hideElement" class="btn btn-success" (click)="upload()">Publicar</button>
+			<a class="btn btn-danger" id="btn-cancelar-publicacao" data-dismiss="modal">Cancelar</a>
+			</form>
+		</div>
+   
+      
+    
+				</div>
+
+			</div>
+			
+		
+		</div>
+
+
+	</div>
+
    
 </div>

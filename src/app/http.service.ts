@@ -43,7 +43,7 @@ export class HttpService {
 	}
 
 	public registerUser(params) {
-		console.log(params)
+	
 		return this.http.post(`${this.BASE_URL}registerUser`, JSON.stringify(params), this.headerOptions)
 			.map((response: Response) => response.json())
 			.catch((error: any) => Observable.throw(error.json().error || `Server error`));
@@ -80,6 +80,27 @@ export class HttpService {
 
 	public insertComentario(params) {
 		return this.http.put(`${this.BASE_URL}insertComentario`, JSON.stringify(params), this.headerOptions)
+			.map((response: Response) => response.json())
+			.catch((error: any) => Observable.throw(error.json().error || `Server error`));
+	}
+
+		public insertPostYoutube(params) {		
+		return this.http.post(`${this.BASE_URL}insertPostYoutube`, JSON.stringify(params), this.headerOptions)
+			.map((response: Response) => response.json())
+			.catch((error: any) => Observable.throw(error.json().error || `Server error`));
+	}
+
+	public excluirPost(params) {
+		console.log(params)		
+		return this.http.post(`${this.BASE_URL}excluirPost`, JSON.stringify(params), this.headerOptions)
+			.map((response: Response) => response.json())
+			.catch((error: any) => Observable.throw(error.json().error || `Server error`));
+	}
+
+	
+	public fotoChat(params) {
+		console.log(params)		
+		return this.http.post(`${this.BASE_URL}foto`, JSON.stringify(params), this.headerOptions)
 			.map((response: Response) => response.json())
 			.catch((error: any) => Observable.throw(error.json().error || `Server error`));
 	}

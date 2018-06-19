@@ -6,7 +6,7 @@ import { Observable } from 'rxjs/Observable';
 import 'rxjs/Rx'
 import { Subject } from "rxjs/Subject";
 import { Observer } from "rxjs/Rx";
-import { Progresso } from "app/progresso.service";
+
 
 
 @Component({
@@ -23,6 +23,7 @@ export class ForumPrincipalComponent implements OnInit {
   hideElement: boolean;
   filesToUpload: any;
   comentario: string;
+  youtube:string;
   tipoArqui: boolean;
   imagem: boolean;
   video: boolean;
@@ -41,28 +42,29 @@ export class ForumPrincipalComponent implements OnInit {
   public progressoPublicacao: string = 'pendente'
   public porcentagemUpload: number
 
+  tamanho:boolean
+
   constructor(private router: Router,
     private forumService: ForumService,
-    private progresso: Progresso,
+    
     private route: ActivatedRoute, ) {
     this.filesToUpload = File;
     this.hideElement = true;
     this.tipoArqui = true;
     this.publicar = true;
-
-
-
+    this.tamanho = true;
+    this.youtube = null;
 
   }
 
   ngOnInit() {
-    alert()
+  
     var currentUser = JSON.parse(localStorage.getItem('currentUser'));
     // this.userId = this.route.snapshot.params['userid']
     this.token = currentUser.token;
     this.userId = this.token.userId;
     this.nomeUserId = this.token.nomeUserId;
-     alert(this.token.cpf)
+   
     this.getPost()
 
   }
@@ -81,15 +83,28 @@ export class ForumPrincipalComponent implements OnInit {
       return
     }
 
+   /* if(this.youtube!= null){
+     
+      this.forumService.insertPostYoutube({ comentario: this.comentario, userId: this.userId, nomePost: this.nomeUserId, youtube:this.youtube }, (error, response) => {
+      this.ngOnDestroy();
+      this.getPost();
+      this.youtube= null;
+    })
+     return
+    }*/
+
     this.forumService.insertPost({ comentario: this.comentario, userId: this.userId, nomePost: this.nomeUserId }, (error, response) => {
       this.ngOnDestroy();
       this.getPost();
-
 
     })
   }
 
   verificaExt(event) {
+    if( event.target.files[0].size>   32337920){
+     this.tamanho = false;
+     return
+    }
 
     let extensoes = new Array("image/gif", "image/jpg", "image/jpeg", "image/png", "video/mp4");
     let teste = event.target.files[0];
@@ -133,18 +148,13 @@ export class ForumPrincipalComponent implements OnInit {
       this.video = true;
       this.publicar = false
 
-
-
     }
     if (this.file.type === 'video/mp4') {
       this.preview = document.querySelector('video')
       this.imagem = true;
       this.video = false;
       this.publicar = false
-
-
     }
-
 
     myReader.onload = (event: any) => {
 
@@ -158,7 +168,6 @@ export class ForumPrincipalComponent implements OnInit {
     }
 
     this.preview = null
-
 
   }
 
@@ -181,12 +190,11 @@ export class ForumPrincipalComponent implements OnInit {
       var xhr = new XMLHttpRequest();
       var estado: number;
       var status: string;
-
       var snapshot: any
 
       formData.append('files', files[0]);
       formData.append('comentario', this.comentario);
-      formData.append('user', this.userId);
+      formData.append('userId', this.userId);
       formData.append('type', this.type);
       formData.append('userPost', this.nomeUserId);
 
@@ -207,9 +215,7 @@ export class ForumPrincipalComponent implements OnInit {
           this.porcentagemUpload = Math.round((event.loaded / event.total) * 100);
           this.progressoPublicacao = 'andamento'
 
-
         }
-
 
       }
       xhr.onloadstart = (e) => {
@@ -240,6 +246,7 @@ export class ForumPrincipalComponent implements OnInit {
     this.comentario = null;
     this.publicar = true;
     this.url = null;
+    this.youtube = null;
 
   }
   liberaPost(texto: string): void {
@@ -261,7 +268,8 @@ export class ForumPrincipalComponent implements OnInit {
       this.posts = []
       if (!response.error) {
         for (let entry of response.posts) {
-
+   
+       
           this.posts.push({
             id: entry._id,
             type: entry.type,
@@ -269,8 +277,9 @@ export class ForumPrincipalComponent implements OnInit {
             nome: entry.nomePost,
             time: entry.time,
             url_imagem: entry.url_imagem,
-            comentarios: entry.comentarios
-            //foto: 'data:' + entry.type + ';base64,' + entry.post.toString('base64')
+            comentarios: entry.comentarios,
+            userId:entry.userId
+            
           })
         }
       }
@@ -281,6 +290,8 @@ export class ForumPrincipalComponent implements OnInit {
   }
   clearFile(): void {
     this.filesToUpload = null;
+    this.tamanho = true;
+    this.tipoArqui = true;
     this.ngOnDestroy();
 
   }
@@ -312,10 +323,17 @@ export class ForumPrincipalComponent implements OnInit {
 
   }
 
+  excluirPost(id):void{
+  
+     this.forumService.excluirPost({id:id},(error, response)=> {
+     this.getPost()
 
+  })
 
-
-
-
+  
 
 }
+}
+
+
+

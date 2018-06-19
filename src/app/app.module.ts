@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 //import { ReactiveFormsModule } from '@angular/forms'
 import { PopoverModule } from "ngx-popover";
+import {ImageCropperComponent  } from 'ng2-img-cropper';
 
 
 import { AppComponent } from './app.component';
@@ -17,10 +18,9 @@ import { ChatService } from "./chat.service";
 import { HttpService } from "./http.service";
 import { AuthGuard } from "app/guards/auth.guard";
 import { ForumPrincipalComponent } from './forum-principal/forum-principal.component';
-import { PainelComponent } from './painel/painel.component';
-import { IncluirPublicacaoComponent } from './forum-principal/incluir-publicacao/incluir-publicacao.component';
-import { Progresso } from "app/progresso.service";
+
 import { DiariasComponent } from './diarias/diarias.component';
+
 
 
 @NgModule({
@@ -30,10 +30,11 @@ import { DiariasComponent } from './diarias/diarias.component';
     ForumComponent,
     ChatComponent,
     PublicarComponent,
-    ForumPrincipalComponent,
-    PainelComponent,
-    IncluirPublicacaoComponent,
-    DiariasComponent
+    ForumPrincipalComponent,    
+    DiariasComponent,
+    ImageCropperComponent
+  
+    
   
 
 
@@ -46,7 +47,7 @@ import { DiariasComponent } from './diarias/diarias.component';
    // ReactiveFormsModule,
     PopoverModule,
   ],
-  providers: [LoginService, ChatService, HttpService, AuthGuard, Progresso],
+  providers: [LoginService, ChatService, HttpService, AuthGuard],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

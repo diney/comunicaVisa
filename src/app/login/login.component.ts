@@ -16,9 +16,9 @@ export class LoginComponent implements OnInit {
 
     overlayDisplay = false;
     validacao = true;
-    username = null;
+   // username = null;
     email = null;
-    password = null;
+    //password = null;
     user: any = {
         username: null,
         password: null,
@@ -107,12 +107,10 @@ export class LoginComponent implements OnInit {
     }
 
     public registerUser(): void {
-
-        console.log(this.newUser.email)
+      
         this.chatService.registerUser({
-
             nome: this.newUser.nome,
-            username: this.user.username,
+          //  username: this.user.username,
             password: this.user.password,
             agencia: this.newUser.agencia,
             conta: this.newUser.conta,

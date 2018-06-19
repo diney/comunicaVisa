@@ -1,25 +1,35 @@
-import { Component, OnInit, OnDestroy, EventEmitter } from '@angular/core';
+import { Component, OnInit, OnDestroy, EventEmitter, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { SocketService } from './../socket.service';
 import { HttpService } from './../http.service';
 import { ChatService } from './../chat.service';
+import { ImageCropperComponent, CropperSettings ,Bounds } from 'ng2-img-cropper';
 
 @Component({
 	selector: 'app-chat',
 	templateUrl: './chat.component.html',
 	styleUrls: ['./chat.component.css'],
 	providers: [ChatService, HttpService, SocketService],
-
+	
 
 })
 export class ChatComponent implements OnInit, OnDestroy {
+
+	 name:string;
+    data1:any;
+    cropperSettings1:CropperSettings;
+    croppedWidth:number;
+    croppedHeight:number;
+    
+    @ViewChild('cropper', undefined) cropper:ImageCropperComponent;
+	
 
 	today: number = Date.now();
 	private filesToUpload: File;
 	hideElement: boolean;
 	tipoArqui: boolean = false;
 	loginEmitter = new EventEmitter
-	arquivo:any
+	arquivo: any
 
 	/*
 	* Variáveis ​​relacionadas com UI são iniciadas
@@ -29,6 +39,7 @@ export class ChatComponent implements OnInit, OnDestroy {
 	selectedSocketId = null;
 	selectedUserName = null;
 	selectedUserFoto = null;
+	overlayDisplayLista = false;
 
 	/*
 	* Variáveis ​​relacionadas com bate-papo 
@@ -44,19 +55,54 @@ export class ChatComponent implements OnInit, OnDestroy {
 	currentUser: any;
 	token: any;
 
+	msg: any
+	msgtotal: any
+	minhasMsg: any;
+	advertencia: any;
+
+	 dig: boolean= true; 
+
+
+
+
 	constructor(
 		private chatService: ChatService,
 		private socketService: SocketService,
+		
 		private route: ActivatedRoute,
 		private router: Router
 	) {
 		this.hideElement = true;
 		this.tipoArqui = true;
+		this.advertencia = null;
 
+	  this.name = 'Angular2'
+      this.cropperSettings1 = new CropperSettings();
+	  // Tamanho minimo 
+      this.cropperSettings1.width = 1;
+      this.cropperSettings1.height = 1;
+	  //Largura da imagem resultante
+      this.cropperSettings1.croppedWidth = 100;
+      this.cropperSettings1.croppedHeight = 100;
+
+      this.cropperSettings1.canvasWidth = 200;
+      this.cropperSettings1.canvasHeight = 200;
+
+      this.cropperSettings1.minWidth = 10;
+      this.cropperSettings1.minHeight = 10;
+
+      this.cropperSettings1.rounded = true;
+      this.cropperSettings1.keepAspect = true;
+
+      this.cropperSettings1.cropperDrawSettings.strokeColor = 'rgba(255,255,255,1)';
+      this.cropperSettings1.cropperDrawSettings.strokeWidth = 2;
+
+      this.data1 = {};
 	}
 
 	ngOnInit() {
 
+		this.msgtotal = 0
 
 		//this.teste= true;
 		this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
@@ -87,7 +133,6 @@ export class ChatComponent implements OnInit, OnDestroy {
 					this.username = response.nome;
 					this.userfoto = response.foto;
 					this.overlayDisplay = true;
-
 					/*
 				* Fazendo a conexão do soquete passando o UserId
 				*/
@@ -97,18 +142,27 @@ export class ChatComponent implements OnInit, OnDestroy {
 					*  Método de serviço de chamada para obter a lista de bate-papo.
 					*/
 					this.socketService.getChatList(this.userId).subscribe(response => {
+						var chatArray: [any] = response.chatList
+
+
+						this.contaMessage(chatArray)
+						this.overlayDisplayLista = true;
 
 						if (!response.error) {
 
 							if (response.singleUser) {
+
 
 								/* 
 								* Removendo o usuário duplicado da matriz da lista de bate-papo.
 								*/
 								if (this.chatListUsers.length > 0) {
 									this.chatListUsers = this.chatListUsers.filter(function (obj) {
+										if (response.chatList._id != undefined) {
+											return obj._id !== response.chatList._id;
+										}
+										return
 
-										return obj._id !== response.chatList._id;
 									});
 
 								}
@@ -118,23 +172,22 @@ export class ChatComponent implements OnInit, OnDestroy {
 								*/
 
 								this.chatListUsers.push(response.chatList);
- 
+
+
 							} else if (response.userDisconnected) {
-                                
+
 								if ((this.selectedUserId !== null) && (this.selectedUserId === response.userId)) {
 									this.selectedUserId = null
 									//this.selectedUserName = null
 									//this.messages = []
 
-									
-
 								}
 								else if (response.desconct) {
-									
+
 									this.selectedUserId = null
 									//this.selectedUserName = null
 									//this.messages = []
-									
+
 									return
 								}
 
@@ -142,7 +195,10 @@ export class ChatComponent implements OnInit, OnDestroy {
 								/* 
 								* Atualizando lista de chat completa se o usuário fizer logon.
 								*/
+
 								this.chatListUsers = response.chatList;
+								this.chatListUsers.sort();
+
 
 							}
 						} else {
@@ -178,7 +234,8 @@ export class ChatComponent implements OnInit, OnDestroy {
 	  *  O método para selecionar o usuário da lista de bate-papo
 	  */
 	selectedUser(user): void {
-		user.msg = "";
+		this.advertencia = null;
+		user.msg = user.msg;
 		this.selectedUserId = user._id;
 		this.selectedSocketId = user.socketId;
 		this.selectedUserName = user.nome;
@@ -189,6 +246,8 @@ export class ChatComponent implements OnInit, OnDestroy {
 		* Método de chamada para obter as mensagens
 		*/
 		this.chatService.getMessages({ userId: this.userId, toUserId: user._id }, (error, response) => {
+
+
 			if (response.messages != 0) {
 				setTimeout(() => {
 					document.querySelector(`.message-thread`).scrollTop = document.querySelector(`.message-thread`).scrollHeight;
@@ -198,18 +257,21 @@ export class ChatComponent implements OnInit, OnDestroy {
 			if (!response.error) {
 				this.messages = response.messages;
 			}
+
+
+
 		});
 
 		this.chatService.updateMessages({ userId: this.userId, toUserId: user._id }, (error, response) => {
-
-			if (!response.error) {
-
-				setTimeout(() => {
-					document.querySelector(`.message-thread`).scrollTop = document.querySelector(`.message-thread`).scrollHeight;
-				}, 100);
-
+			if ((user.msg != undefined) && (user.msg > 0)) {
+				this.msgtotal -= user.msg
+				user.msg = null;
 			}
+
+
 		});
+
+		this.message = null;
 	}
 
 	isUserSelected(userId: string): boolean {
@@ -221,10 +283,37 @@ export class ChatComponent implements OnInit, OnDestroy {
 		return this.selectedUserId === userId ? true : false;
 	}
 
+	digitando(userId: string) {
+		if (userId == this.userId) {
+			return true;
+		}
+		return false;
+	}
+	stopDigitar() {
+		//para de digitar no broadcast com userSelc: null
+		this.socketService.userDigitandoMessage({ userId: this.userId, userSelc: null });
+		this.dig = true;
+	}
+
 	sendMessage(event) {
+       
+		if (this.selectedUserId === null) {
+			this.advertencia = "Selecione um usuário na  lista de bate papo a sua direita. ---->"
 
-		if (event.keyCode === 13) {
+			return
+		}
 
+		if(event.target.value.trim() && this.dig){
+		
+			this.socketService.userDigitandoMessage({ userId: this.userId, userSelc: this.selectedUserId });
+			this.dig = false;	
+		}
+		
+
+		if (event.keyCode === 13 && event.target.value.trim()) {
+			this.dig = true;
+			//para de digitar no broadcast com userSelc: null
+			this.socketService.userDigitandoMessage({ userId: this.userId, userSelc: null });
 			if (this.message === '' || this.message === null) {
 				alert(`Message can't be empty.`);
 			} else {
@@ -267,6 +356,7 @@ export class ChatComponent implements OnInit, OnDestroy {
 
 
 	logout() {
+		this.msgtotal = 0;
 		this.selectedUserName = null;
 		this.socketService.logout({ userId: this.userId }).subscribe(response => {
 			//this.router.navigate(['/']); /* Home page redirection */
@@ -284,67 +374,23 @@ export class ChatComponent implements OnInit, OnDestroy {
 
 			if (extensoes[i] == teste.type) {
 				this.tipoArqui = true;
-				this.fileChangeEvent(event);
+				
 				return;
 			}
 			this.tipoArqui = false;
 		}
 	}
 
-	fileChangeEvent(event) {
-
-		this.hideElement = false;
-		this.readThis(event.target);
-		this.filesToUpload = event.target.files;
-	}
-
-	readThis(inputValue: any): void {
-
-		var file: File = inputValue.files[0];
-		var myReader: FileReader = new FileReader();
-
-
-		var preview = document.querySelector('img');
-		myReader.onloadend = function (e) {
-
-			preview.src = myReader.result;
-		}
-		if (file) {
-			myReader.readAsDataURL(file);
-		}
-		preview.src = "";
-	}
+	
 
 	upload() {
-		this.makeFileRequest("http://172.22.2.221:8080/foto", this.filesToUpload).then((result) => {
-		}, (error) => {
-			console.log(error);
-		});
+		this.chatService.fotoChat({userId:this.userId, foto:this.data1.image}, (error, response) => {
+			this.ngOnInit();
+			
+		})
+	
+		
 	}
-
-	makeFileRequest(url: string, files) {
-		return new Promise((resolve, reject) => {
-			var formData: any = new FormData();
-			var xhr = new XMLHttpRequest();
-
-			formData.append('files', files[0]);
-			formData.append('user', this.userId);
-
-			xhr.onreadystatechange = function () {
-				if (xhr.readyState == 4) {
-					if (xhr.status == 200) {
-						resolve(JSON.parse(xhr.response));
-					} else {
-						reject(xhr.response);
-					}
-				}
-			}
-			xhr.open("POST", url, true);
-			xhr.send(formData);
-			//this.router.navigate(['/forum']);
-		});
-	}
-
 
 	ngOnDestroy() {
 		this.logout();
@@ -353,7 +399,43 @@ export class ChatComponent implements OnInit, OnDestroy {
 
 	limpaUpload() {
 		this.hideElement = true;
+	}
 
+	contaMessage(response: any) {
+		if (response != undefined) {
+
+			for (var i = 0; i < response.length; i++) {
+				if (response[i].msg != undefined) {
+					if (response[i].toUserId == this.userId) {
+						this.msgtotal += response[i].msg;
+					}
+				}
+
+
+			}
+		}
+
+	}
+
+	cropped(bounds:Bounds) {
+  console.log(bounds)
+  console.log(this.data1.image)
+  }
+  
+
+	fileChangeListener($event) {
+		var image: any = new Image();
+		var file: File = $event.target.files[0];
+		var myReader: FileReader = new FileReader();
+		var that = this;
+		myReader.onloadend = function (loadEvent: any) {
+			image.src = loadEvent.target.result;
+			that.cropper.setImage(image);
+
+		};
+		
+    
+		myReader.readAsDataURL(file);
 
 	}
 
