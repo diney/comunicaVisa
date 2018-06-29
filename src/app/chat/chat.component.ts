@@ -61,7 +61,9 @@ export class ChatComponent implements OnInit, OnDestroy {
 	advertencia: any;
 
 	 dig: boolean= true; 
-
+	userSelct: any;
+	msgOnline: any;
+	
 
 
 
@@ -75,6 +77,8 @@ export class ChatComponent implements OnInit, OnDestroy {
 		this.hideElement = true;
 		this.tipoArqui = true;
 		this.advertencia = null;
+		this.userSelct = null;
+		this.msgOnline = null;
 
 	  this.name = 'Angular2'
       this.cropperSettings1 = new CropperSettings();
@@ -142,19 +146,37 @@ export class ChatComponent implements OnInit, OnDestroy {
 					*  Método de serviço de chamada para obter a lista de bate-papo.
 					*/
 					this.socketService.getChatList(this.userId).subscribe(response => {
-						var chatArray: [any] = response.chatList
+						var chatArray: [any] = response.chatList			
+							console.log(chatArray)
+					/*	if(this.selectedUserId){
+							console.log('opa'+this.msgOnline._id+"   "+this.userId)
+						  if(this.msgOnline._id == this.userId){
+							console.log('opa++++')
+							this.chatService.updateMessages({ userId: this.userId, toUserId: this.msgOnline._id }, (error, response) => {
+								if ((this.msgOnline.msg != undefined) && (this.msgOnline.msg > 0)) {
+									this.msgtotal -=this.msgOnline.msg
+									this.msgOnline.msg = null;
+								}
+					
+					
+							});
+					 
+		
+						}
+						
+					}*/
 
-
-						this.contaMessage(chatArray)
+							this.contaMessage(chatArray)			
+							
+						
 						this.overlayDisplayLista = true;
 
 						if (!response.error) {
 
 							if (response.singleUser) {
-
-
+								
 								/* 
-								* Removendo o usuário duplicado da matriz da lista de bate-papo.
+								* Removendo o usuário duplicado  da lista de bate-papo.
 								*/
 								if (this.chatListUsers.length > 0) {
 									this.chatListUsers = this.chatListUsers.filter(function (obj) {
@@ -168,26 +190,25 @@ export class ChatComponent implements OnInit, OnDestroy {
 								}
 
 								/* 
-								*Adicionando novo usuário online na lista de lista de bate-papo
+								*Adicionando novo usuário online na lista de bate-papo
 								*/
 
+						
 								this.chatListUsers.push(response.chatList);
+
 
 
 							} else if (response.userDisconnected) {
 
 								if ((this.selectedUserId !== null) && (this.selectedUserId === response.userId)) {
 									this.selectedUserId = null
-									//this.selectedUserName = null
-									//this.messages = []
+									
 
 								}
 								else if (response.desconct) {
 
 									this.selectedUserId = null
-									//this.selectedUserName = null
-									//this.messages = []
-
+								
 									return
 								}
 
@@ -195,8 +216,9 @@ export class ChatComponent implements OnInit, OnDestroy {
 								/* 
 								* Atualizando lista de chat completa se o usuário fizer logon.
 								*/
-
+							
 								this.chatListUsers = response.chatList;
+							
 								this.chatListUsers.sort();
 
 
@@ -230,23 +252,29 @@ export class ChatComponent implements OnInit, OnDestroy {
 
 		this.foto = true;
 	}
+
+	
 	/* 
 	  *  O método para selecionar o usuário da lista de bate-papo
 	  */
 	selectedUser(user): void {
+		
 		this.advertencia = null;
 		user.msg = user.msg;
 		this.selectedUserId = user._id;
 		this.selectedSocketId = user.socketId;
 		this.selectedUserName = user.nome;
 		this.selectedUserFoto = user.foto;
+		this.msgOnline = user;
+		
+	
 
 
 		/* 
 		* Método de chamada para obter as mensagens
 		*/
 		this.chatService.getMessages({ userId: this.userId, toUserId: user._id }, (error, response) => {
-
+               
 
 			if (response.messages != 0) {
 				setTimeout(() => {
@@ -259,18 +287,24 @@ export class ChatComponent implements OnInit, OnDestroy {
 			}
 
 
-
 		});
 
-		this.chatService.updateMessages({ userId: this.userId, toUserId: user._id }, (error, response) => {
-			if ((user.msg != undefined) && (user.msg > 0)) {
-				this.msgtotal -= user.msg
-				user.msg = null;
-			}
+				if(user.toUserId == this.userId){
 
+					this.chatService.updateMessages({ userId: this.userId, toUserId: user._id }, (error, response) => {
+						if ((user.msg != undefined) && (user.msg > 0)) {
+							this.msgtotal -= user.msg
+							user.msg = null;
+						}
+			
+			
+					});
+			 
 
-		});
-
+				}
+				
+			
+		
 		this.message = null;
 	}
 
@@ -291,7 +325,7 @@ export class ChatComponent implements OnInit, OnDestroy {
 	}
 	stopDigitar() {
 		//para de digitar no broadcast com userSelc: null
-		this.socketService.userDigitandoMessage({ userId: this.userId, userSelc: null });
+		this.socketService.userDigitandoMessage({ userId: this.userId, userSelc: this.selectedUserId,stop:false });
 		this.dig = true;
 	}
 
@@ -305,7 +339,7 @@ export class ChatComponent implements OnInit, OnDestroy {
 
 		if(event.target.value.trim() && this.dig){
 		
-			this.socketService.userDigitandoMessage({ userId: this.userId, userSelc: this.selectedUserId });
+			this.socketService.userDigitandoMessage({ userId: this.userId, userSelc: this.selectedUserId ,stop:true});
 			this.dig = false;	
 		}
 		
@@ -313,7 +347,7 @@ export class ChatComponent implements OnInit, OnDestroy {
 		if (event.keyCode === 13 && event.target.value.trim()) {
 			this.dig = true;
 			//para de digitar no broadcast com userSelc: null
-			this.socketService.userDigitandoMessage({ userId: this.userId, userSelc: null });
+			this.socketService.userDigitandoMessage({ userId: this.userId,userSelc: this.selectedUserId ,stop:false});
 			if (this.message === '' || this.message === null) {
 				alert(`Message can't be empty.`);
 			} else {
@@ -332,8 +366,10 @@ export class ChatComponent implements OnInit, OnDestroy {
 						toUserId: this.selectedUserId,
 						toSocketId: this.selectedSocketId,
 						hora: this.today,
-						read: false,
+						read: 'false',
 						fromSocketId: this.socketId
+						
+
 					}
 					this.messages.push(data);
 					setTimeout(() => {

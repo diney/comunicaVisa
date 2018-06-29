@@ -81,13 +81,29 @@ margin-top:60px;
     -moz-border-radius:50%;
    -webkit-border-radius:50%;
     
-    border: groove 0.1em rgb(183, 231, 134);
+    border:  0.3em #BDBDBD;
     font-size: 12px;
     color:#fff;
-    margin-left: 5px;
+    margin-left: 8px;
     text-align: center;
     padding: 1px; 
     background-color:forestgreen;
+     box-shadow: 3px 3px 3px rgba(90, 150, 172, 0.85);
+}
+
+.msgn{
+    border-radius: 52px;
+    -moz-border-radius:52%;
+   -webkit-border-radius:48%;
+    
+    border:  0.3em #BDBDBD;
+    font-size: 12px;
+    color:#fff;
+    margin-left: 10px;
+    text-align: center;
+    padding: 2px; 
+    background-color:forestgreen;
+     box-shadow: 3px 3px 3px rgba(90, 150, 172, 0.85);
 }
 
 
@@ -211,7 +227,8 @@ background-image: url("/assets/images/logos/fundo.png");;
 }
 .user-online{
     font-size: 13px;    
-    color: rgb(0, 179, 0)
+    color: rgb(0, 179, 0);
+    
 
 }
 .user-offline{
@@ -343,24 +360,6 @@ background-image: url("/assets/images/logos/fundo.png");;
 
 
 
-.result {
-            margin-top: 30px;
-            border: 1px solid rgba(125,125,125,0.6);
-            display: inline-block;
-            padding: 1px;
-        }
-
-        .result.rounded > img {
-            border-radius: 100px;
-        }
-
-        .pull-left {
-            min-width: 400px;
-            float: left;
-            margin: 10px;
-            padding: 10px;
-            background-color: rgba(0,0,0,0.05);
-        }
 
 
 

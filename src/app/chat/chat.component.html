@@ -60,7 +60,7 @@
 								<p>
 
 									<time> {{ message.hora | date:'shortTime' }}
-										<div *ngIf=" message.read && alignMessage(message.toUserId) ">
+										<div *ngIf=" message.read == 'true' && alignMessage(message.toUserId) ">
 											<img src="assets/images/logos/bullet_blue.png" />
 										</div>
 									</time>
@@ -96,7 +96,19 @@
 						<!-- adding a class to indicate the selection     [class.selected-user]="isUserSelected(user._id)" -->
 						<li *ngFor="let user of chatListUsers" (click)="selectedUser(user)" [class.selected-user]="isUserSelected(user._id)">
 
+
+
 							<div class=" row user-online" *ngIf=" user.online == 'Y'">
+
+								<div *ngFor="let userl of user.msgLogout">
+									<div class="col-12 " [class.msgn]="userl.total" *ngIf="userl._id == this.userId">
+										{{userl.total}}
+
+									</div>
+
+
+								</div>
+
 								<div class="col-1" [class.msg]="user.msg" *ngIf="user.toUserId == this.userId">
 
 									{{user.msg }}</div>
@@ -109,14 +121,48 @@
 							</div>
 
 
+
+
+
 							<div class=" row user-offline" *ngIf="user.online == 'N'">
 
-								<div class="col-1" [class.msg]="user.msg" *ngIf="user.toUserId == this.userId">
+								<div *ngFor="let userl of user.msgLogout">
+									<div class="col-12 " [class.msgn]="userl.total" *ngIf="userl._id == this.userId">
+										{{userl.total}}
 
-									{{user.msg }}</div>
-								<div class=" col-10">
-									{{ user.nome}}</div>
+									</div>
+
+
+								</div>
+
+								<div class="col-10" *ngIf="user.msgLogout">
+									{{ user.nome}} </div>
+
+
+
 							</div>
+
+
+
+
+							<div class=" row user-offline" *ngIf="user.online == 'N' ">
+
+
+								<div class="col-1" [class.msg]="user.msg" *ngIf="!user.msgLogout">
+
+									{{user.msg}}</div>
+								<div class=" col-10" *ngIf="!user.msgLogout">
+									{{ user.nome}} </div>
+
+
+
+							</div>
+
+
+
+
+
+
 
 
 
@@ -143,11 +189,12 @@
 								<div class="col-10">
 									<img-cropper [image]="data1" [settings]="cropperSettings1" (onCrop)="cropped($event)"></img-cropper>
 								</div>
-								<br/><br/><br/>
+								<br/>
+								<br/>
+								<br/>
 								<div class="col-1">
 									<span class="cropper" *ngIf="data1.image">
-										<img [src]="data1.image" [width]="100" [height]="100"> 
-									{{data1.image.size}}
+										<img [src]="data1.image" [width]="100" [height]="100"> {{data1.image.size}}
 									</span>
 								</div>
 

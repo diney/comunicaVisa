@@ -90,17 +90,22 @@ export class HttpService {
 			.catch((error: any) => Observable.throw(error.json().error || `Server error`));
 	}
 
-	public excluirPost(params) {
-		console.log(params)		
+	public excluirPost(params) {		
 		return this.http.post(`${this.BASE_URL}excluirPost`, JSON.stringify(params), this.headerOptions)
 			.map((response: Response) => response.json())
 			.catch((error: any) => Observable.throw(error.json().error || `Server error`));
 	}
 
 	
-	public fotoChat(params) {
-		console.log(params)		
+	public fotoChat(params) {			
 		return this.http.post(`${this.BASE_URL}foto`, JSON.stringify(params), this.headerOptions)
+			.map((response: Response) => response.json())
+			.catch((error: any) => Observable.throw(error.json().error || `Server error`));
+	}
+
+	public getContMessageLogout(params) {
+			
+		return this.http.post(`${this.BASE_URL}getContMessageLogout`, JSON.stringify(params), this.headerOptions)
 			.map((response: Response) => response.json())
 			.catch((error: any) => Observable.throw(error.json().error || `Server error`));
 	}
@@ -108,5 +113,6 @@ export class HttpService {
 
 
 
+	
 
 }

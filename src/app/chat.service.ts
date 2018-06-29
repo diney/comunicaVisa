@@ -90,6 +90,7 @@ export class ChatService {
 	public getMessages(params, callback): any {
 		this.httpService.getMessages(params).subscribe(
 			response => {
+				console.log(response)
 				callback(false, response);
 					
 			},
@@ -144,6 +145,21 @@ export class ChatService {
 			}
 		);
 	}
+
+	/* 
+	* Method to check the session of user.
+	*/
+	public getContMessageLogout(params, callback): any {
+		this.httpService.getContMessageLogout(params).subscribe(
+			response => {
+				callback(false, response);
+			},
+			error => {
+				callback(true, 'HTTP fail.');
+			}
+		);
+	}
+
 
 
 
