@@ -12,7 +12,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 export class ForumComponent implements OnInit {
   posts: Array<any>;
   valueDate = new Date();
-  userId = null;
+  userId : string;
   overlayDisplay = false;
   v: string;
 
@@ -34,7 +34,9 @@ export class ForumComponent implements OnInit {
   ngOnInit() {
     this.carregaPost();
     var currentUser = JSON.parse(localStorage.getItem('currentUser'));
-    this.token = currentUser.token; // your token
+    this.token = currentUser.token; 
+    this.userId = this.token.userId;
+   
     /*
   * Obtendo ID do usuário do URL usando 'route.snapshot'
   */
@@ -53,10 +55,13 @@ export class ForumComponent implements OnInit {
       });
   }
   upload() {
+   
     if (this.titulo == undefined || !this.titulo.trim) {
+
       return;
     }
-    this.makeFileRequest("http://172.22.2.221:4000/postagem", this.filesToUpload).then((result) => {
+   
+    this.makeFileRequest("http://172.22.2.17:4000/postagem", this.filesToUpload).then((result) => {
     }, (error) => {
       console.log(error);
     });
@@ -80,7 +85,7 @@ export class ForumComponent implements OnInit {
   }
 
   fileChangeEvent(event) {
-
+    
     this.hideElement = false;
     this.readThis(event.target);
     this.filesToUpload = event.target.files;
@@ -104,12 +109,15 @@ export class ForumComponent implements OnInit {
   }
 
   makeFileRequest(url: string, files) {
+  
     return new Promise((resolve, reject) => {
       var formData: any = new FormData();
       var xhr = new XMLHttpRequest();
 
       formData.append('files', files[0]);
+      formData.append('userId', 123456);
       formData.append('titulo', this.titulo);
+      
 
 
       xhr.onreadystatechange = function () {
@@ -127,10 +135,25 @@ export class ForumComponent implements OnInit {
     });
 
   }
+ 
 
-  
+  excluirPost(id): void {
+
+    this.forumService.excluirPostById({ id: id }, (error, response) => {
+
+      this.carregaPost()
+    })
 
 
+  }
+
+  verificaPermissao():boolean {
+   
+    if(this.userId === "5b3e92b837853b0cd80f8152"){
+     return true; 
+    }
+    return false;
+  }
 
 }
 

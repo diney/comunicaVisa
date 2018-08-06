@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 //import { ReactiveFormsModule } from '@angular/forms'
 import { PopoverModule } from "ngx-popover";
-import {ImageCropperComponent  } from 'ng2-img-cropper';
+import { ImageCropperComponent } from 'ng2-img-cropper';
 
 
 import { AppComponent } from './app.component';
@@ -18,8 +18,10 @@ import { ChatService } from "./chat.service";
 import { HttpService } from "./http.service";
 import { AuthGuard } from "app/guards/auth.guard";
 import { ForumPrincipalComponent } from './forum-principal/forum-principal.component';
-
 import { DiariasComponent } from './diarias/diarias.component';
+import { BuscaNomePipe } from './busca-nome.pipe';
+
+
 
 
 
@@ -30,12 +32,12 @@ import { DiariasComponent } from './diarias/diarias.component';
     ForumComponent,
     ChatComponent,
     PublicarComponent,
-    ForumPrincipalComponent,    
+    ForumPrincipalComponent,
     DiariasComponent,
-    ImageCropperComponent
-  
-    
-  
+    ImageCropperComponent,
+    BuscaNomePipe
+ 
+
 
 
   ],
@@ -44,8 +46,10 @@ import { DiariasComponent } from './diarias/diarias.component';
     FormsModule,
     HttpModule,
     routing,
-   // ReactiveFormsModule,
-    PopoverModule,
+    // ReactiveFormsModule,
+    PopoverModule
+     // Include the awesome
+    
   ],
   providers: [LoginService, ChatService, HttpService, AuthGuard],
   bootstrap: [AppComponent]

@@ -73,7 +73,7 @@ export class ForumPrincipalComponent implements OnInit {
    
     if (this.type != undefined) {
 
-      this.makeFileRequest("http://172.22.2.221:8080/post", this.filesToUpload).then((result) => {
+      this.makeFileRequest("http://172.22.2.17:8080/post", this.filesToUpload).then((result) => {
       }, (error) => {
         console.log(error);
       });

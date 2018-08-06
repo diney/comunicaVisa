@@ -16,7 +16,7 @@
 				<span>NOTÍCIAS</span>
 
 				<div class="home-navigation">
-					<div class="d-flex justify-content-end">
+					<div class="d-flex justify-content-end" *ngIf="verificaPermissao()" >
 					 <button class="btn btn-outline-success my-2 my-sm-0" routerLink="/publicar">Post</button>
 					</div>
 				</div>
@@ -30,14 +30,28 @@
   <!-- Loading overlay section starts -->
    <ul class="timeline">
     <li *ngFor="let post of  posts">
-      <div class="timeline-badge info"><i class="glyphicon glyphicon-credit-card"></i></div>
+      <div class="timeline-badge info"> <img src="assets/images/logos/favicon.ico" /></div>
       <div class="timeline-panel">
         <div class="timeline-heading">
+						<div class="row">
+								<div class="col-12">
           <h4 class="timeline-title">{{post.nome }}</h4>
+				
+					<p><small class="text-muted"><i class="glyphicon glyphicon-time"></i> {{post.time | date: 'dd/MM/yyyy'}}</small>
+					
+						
+					</p>
+					<div   class=" d-flex justify-content-end" *ngIf="verificaPermissao()">
+							<button type="button" class="btn btn-danger btn-xs" title="EXCLUIR POST"  (click)="excluirPost(post.id)">X</button>
+						</div>
+					</div>
 
-          <p><small class="text-muted"><i class="glyphicon glyphicon-time"></i> {{post.time | date: 'dd/MM/yyyy'}}</small></p>
-
-        </div>
+				
+						</div>		
+						
+						
+				</div>
+			
         <div class="timeline-body">
           <div *ngIf="post.caminho==undefined">
             <img class="rounded mx-auto d-block img-200-200 img-responsive" src="{{post.foto}}">

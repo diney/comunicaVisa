@@ -90,7 +90,7 @@ export class ChatService {
 	public getMessages(params, callback): any {
 		this.httpService.getMessages(params).subscribe(
 			response => {
-				console.log(response)
+			
 				callback(false, response);
 					
 			},
@@ -149,8 +149,8 @@ export class ChatService {
 	/* 
 	* Method to check the session of user.
 	*/
-	public getContMessageLogout(params, callback): any {
-		this.httpService.getContMessageLogout(params).subscribe(
+	public getContMessage(params, callback): any {
+		this.httpService.getContMessage(params).subscribe(
 			response => {
 				callback(false, response);
 			},
@@ -159,6 +159,47 @@ export class ChatService {
 			}
 		);
 	}
+
+	/* 
+	* Method to check the session of user.
+	*/
+	public getFotoChatById(params, callback): any {
+		this.httpService.getFotoChatById(params).subscribe(
+			response => {
+				callback(false, response);
+			},
+			error => {
+				callback(true, 'HTTP fail.');
+			}
+		);
+	}
+
+	public userGetById(params, callback): any {
+		this.httpService.userGetById(params).subscribe(
+			response => {
+				callback(false, response);
+			},
+			error => {
+				callback(true, 'HTTP fail.');
+			}
+		);
+	}
+
+	public dateNow( callback): any {
+		this.httpService.dateNow().subscribe(
+			response => {
+				callback(false, response);
+				
+			},
+			error => {
+				callback(true, 'HTTP fail.');	
+			}
+		);
+	}
+
+
+	
+
 
 
 

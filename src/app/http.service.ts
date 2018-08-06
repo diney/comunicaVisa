@@ -15,8 +15,8 @@ export class HttpService {
 	/* 
 * specifying Base URL.
 */
-	private BASE_URL = 'http://172.22.2.221:8080/';
-
+	private BASE_URL = 'http://172.22.2.17:8080/';
+	private BASE_URL_POST ='http://172.22.2.17:4000/'
     /* 
 	* Setting the Request headers.
 	*/
@@ -103,12 +103,37 @@ export class HttpService {
 			.catch((error: any) => Observable.throw(error.json().error || `Server error`));
 	}
 
-	public getContMessageLogout(params) {
-			
-		return this.http.post(`${this.BASE_URL}getContMessageLogout`, JSON.stringify(params), this.headerOptions)
+	public getContMessage(params) {			
+		return this.http.post(`${this.BASE_URL}getContMessage`, JSON.stringify(params), this.headerOptions)
 			.map((response: Response) => response.json())
 			.catch((error: any) => Observable.throw(error.json().error || `Server error`));
 	}
+
+	public getFotoChatById(params) {			
+		return this.http.post(`${this.BASE_URL}getFotoChatById`, JSON.stringify(params), this.headerOptions)
+			.map((response: Response) => response.json())
+			.catch((error: any) => Observable.throw(error.json().error || `Server error`));
+	}
+
+	public excluirPostById(params) {	
+		return this.http.post(`${this.BASE_URL_POST}excluirPostById`, JSON.stringify(params), this.headerOptions)
+			.map((response: Response) => response.json())
+			.catch((error: any) => Observable.throw(error.json().error || `Server error`));
+	}
+
+	public userGetById(params) {		
+		return this.http.post(`${this.BASE_URL}userGetById`, JSON.stringify(params), this.headerOptions)
+			.map((response: Response) => response.json())
+			.catch((error: any) => Observable.throw(error.json().error || `Server error`));
+	}
+
+	
+	public dateNow(){		
+		return this.http.post(`${this.BASE_URL}dateNow`, this.headerOptions)
+			.map((response: Response) => response.json())
+			.catch((error: any) => Observable.throw(error.json().error || `Server error`));
+	}
+	
 
 
 

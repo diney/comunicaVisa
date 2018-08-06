@@ -14,7 +14,7 @@ export class SocketService {
 	/* 
 	* specifying Base URL.
 	*/
-	private BASE_URL = 'http://172.22.2.221:8080';
+	private BASE_URL = 'http://172.22.2.17:8080';
 	private socket;
 
 	constructor() { }

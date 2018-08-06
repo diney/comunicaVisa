@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 
-import { Http, Headers } from '@angular/http';
-import 'rxjs/add/operator/map';
+import { Http} from '@angular/http';
+import { HttpService } from '../http.service';
 
 @Injectable()
 export class ForumService {
@@ -9,8 +9,13 @@ export class ForumService {
   baseUriPost: string;
   baseUriVidio: string;
 
-  constructor(public http: Http) {
-    this.localhost = 'http://172.22.2.221:4000'
+
+  
+
+
+  constructor(public http: Http,
+    private httpService: HttpService) {
+    this.localhost = 'http://172.22.2.17:4000'
     this.baseUriPost = this.localhost + '/postagem';
      this.baseUriVidio = this.localhost + '/movies/mov_bbb.mp4';
     this.findAllPost();
@@ -40,6 +45,22 @@ export class ForumService {
         });
     });
   }
+
+
+  public excluirPostById(params, callback): any {
+  
+		this.httpService.excluirPostById(params).subscribe(
+			response => {
+				callback(false, response);
+			},
+			error => {
+				callback(true, 'HTTP fail.');
+			}
+		);
+	}
+
+
+ 
 
 }
 

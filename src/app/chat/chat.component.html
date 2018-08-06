@@ -58,23 +58,23 @@
 
 								{{message.message}}
 								<p>
-
 									<time> {{ message.hora | date:'shortTime' }}
 										<div *ngIf=" message.read == 'true' && alignMessage(message.toUserId) ">
-											<img src="assets/images/logos/bullet_blue.png" />
+											<img src="assets/images/logos/check.ico" />
 										</div>
 									</time>
-									<p>
 
+								</p>
 							</li>
 						</ul>
 
 					</div>
-					<div class="message-typer">
-						<textarea class="message form-control" placeholder="Digite e tecle Enter" [(ngModel)]="message" (keyup)="sendMessage($event)"
-						 (change)="stopDigitar()" required></textarea>
+					<div class="message-typer" >
+						<textarea class="message form-control" placeholder="Digite e tecle Enter" [(ngModel)]="message" (keyup)="sendMessage($event)" 
+						 (change)="stopDigitar()" required  ></textarea>
 
 					</div>
+
 				</div>
 			</div>
 			<!-- Messages section ends -->
@@ -82,6 +82,7 @@
 			<!-- User chat list section starts -->
 			<div class="col-md-3">
 				<div class="user-list-wrapper">
+					<input type="text" [(ngModel)]="searchText" class="form-control" placeholder="Busca por nome" />
 					<ul class="user-list">
 						<div [class.overlay-display]="overlayDisplayLista" class="overlay">
 							<div class="spinner">
@@ -94,9 +95,8 @@
 						</div>
 						<!-- click event to handle the selection : selectedUser() -->
 						<!-- adding a class to indicate the selection     [class.selected-user]="isUserSelected(user._id)" -->
-						<li *ngFor="let user of chatListUsers" (click)="selectedUser(user)" [class.selected-user]="isUserSelected(user._id)">
 
-
+						<li *ngFor="let user of chatListUsers | buscaNome:searchText  " (click)="selectedUser(user)" [class.selected-user]="isUserSelected(user._id)">
 
 							<div class=" row user-online" *ngIf=" user.online == 'Y'">
 
@@ -105,7 +105,6 @@
 										{{userl.total}}
 
 									</div>
-
 
 								</div>
 
@@ -121,9 +120,6 @@
 							</div>
 
 
-
-
-
 							<div class=" row user-offline" *ngIf="user.online == 'N'">
 
 								<div *ngFor="let userl of user.msgLogout">
@@ -131,22 +127,12 @@
 										{{userl.total}}
 
 									</div>
-
-
 								</div>
 
 								<div class="col-10" *ngIf="user.msgLogout">
 									{{ user.nome}} </div>
-
-
-
 							</div>
-
-
-
-
 							<div class=" row user-offline" *ngIf="user.online == 'N' ">
-
 
 								<div class="col-1" [class.msg]="user.msg" *ngIf="!user.msgLogout">
 
@@ -157,12 +143,6 @@
 
 
 							</div>
-
-
-
-
-
-
 
 
 

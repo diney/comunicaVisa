@@ -58,6 +58,7 @@ export class DiariasComponent implements OnInit {
   competencia: string = " ";
   email: string;
   dataAtual = new Date();
+  usuario:any
   meioTrans = [
     { nome: 'Veículo Oficial' },
     { nome: 'Veículo Próprio' },
@@ -120,23 +121,24 @@ deslocamento = new Deslocamento(this.idTabela, this.startDate, '', 'cidadePartid
     this.currentUser = JSON.parse(localStorage.getItem('currentUser'));
     this.token = this.currentUser.token;// your token
     this.userId = this.token.userId;
-    this.chatService.userSessionCheck(this.userId, (error, response) => {
-      console.log(response)
+    this.chatService.userGetById({userId:this.userId}, (error, response) => {
+    this.usuario = response.messages;
+     
       if (error) {
       } else {
-        this.nome = (response.nome === undefined) ? " " : response.nome;
-        this.cpf = (response.cpf === undefined) ? " " : response.cpf;
-        this.funcao = (response.funcao === undefined) ? " " : response.matricula;
-        this.matricula = (response.matricula === undefined) ? " " : response.matricula;
-        this.banco = (response.banco === undefined) ? " " : response.banco;
-        this.agencia = (response.agencia === undefined) ? " " : response.agencia;
-        this.conta = (response.conta === undefined) ? " " : response.conta;
-        this.local = (response.unidade === undefined) ? " " : response.unidade;
-        this.cargo = (response.cargo === undefined) ? " " : response.cargo;
-        this.municipio = (response.municipio === undefined) ? " " : response.municipio;
-        this.vinculo = (response.vinculo === undefined) ? " " : response.vinculo;
-        this.grupo = (response.grupo === undefined) ? " " : response.grupo;
-        this.email = (response.email === undefined) ? " " : response.email;
+        this.nome = (this.usuario.nome === undefined) ? " " : this.usuario.nome;
+        this.cpf = (this.usuario.cpf === undefined) ? " " : this.usuario.cpf ;
+        this.funcao = (this.usuario.funcao === undefined) ? " " : this.usuario.funcao;
+        this.matricula = (this.usuario.matricula === undefined) ? " " : this.usuario.matricula;
+        this.banco = (this.usuario.banco === undefined) ? " " : this.usuario.banco;
+        this.agencia = (this.usuario.agencia === undefined) ? " " : this.usuario.agencia;
+        this.conta = (this.usuario.conta === undefined) ? " " : this.usuario.conta;
+        this.local = (this.usuario.unidade === undefined) ? " " : this.usuario.unidade;
+        this.cargo = (this.usuario.cargo === undefined) ? " " : this.usuario.cargo;
+        this.municipio = (this.usuario.municipio === undefined) ? " " : this.usuario.municipio;
+        this.vinculo = (this.usuario.vinculo === undefined) ? " " : this.usuario.vinculo;
+        this.grupo = (this.usuario.grupo === undefined) ? " " : this.usuario.grupo;
+        this.email = (this.usuario.email === undefined) ? " " : this.usuario.email;
 
       }
     });

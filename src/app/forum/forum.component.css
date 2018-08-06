@@ -71,7 +71,7 @@ margin-top:60px;
   right: -14px;
   display: inline-block;
   border-top: 14px solid transparent;
-  border-left: 14px solid #fff;
+  border-left: 14px solid#fff;
   border-right: 0 solid #fff;
   border-bottom: 14px solid transparent;
   content: " ";
@@ -87,8 +87,8 @@ margin-top:60px;
   top: 16px;
   right: 0px;
   margin-left: -25px;
-  background-color: #999999;
-  z-index: 100;
+  background-color: #20B2AA;
+  z-index: 50;
   border-top-right-radius: 50%;
   border-top-left-radius: 50%;
   border-bottom-right-radius: 50%;
@@ -121,9 +121,9 @@ margin-top:60px;
 .timeline-badge.danger {
   background-color: #d9534f !important;
 }
-.timeline-badge.info {
+/*.timeline-badge.info {
   background-color: #5bc0de !important;
-}
+ }*/
 .timeline-title {
   margin-top: 0;
   color: inherit;

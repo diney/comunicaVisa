@@ -10,7 +10,7 @@ export class LoginService {
   
 
   constructor(public http: Http) {
-    this.baseUri = 'http://172.22.2.221:4000/api/autenticar';
+    this.baseUri = 'http://172.22.2.17:4000/api/autenticar';
   }
 
   autenticar(usuario) {      
